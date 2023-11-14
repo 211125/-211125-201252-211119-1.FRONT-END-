@@ -41,6 +41,11 @@ class PoshRepositoryImpl implements PoshRepository {
     return await poshLocalDataSource.getGif();
 
   }
+  @override
+  Future<List<PostModel>> getPdf() async {
+    return await poshLocalDataSource.getPdf();
+
+  }
   //  @override
   //   Future<void> createUser(UserModel user) async {
   //     await userLocalDataSource.createUser(user);

@@ -21,7 +21,7 @@ abstract class poshLocalDataSource {
 }
 
 class PoshLocalDataSourceImp implements poshLocalDataSource {
-  final String _baseUrl = 'https://plv3w7fl-3000.usw3.devtunnels.ms';
+  final String _baseUrl = 'http://192.168.1.73:3000';
 
 @override
 Future<List<PostModel>> getUsers() async {
@@ -38,7 +38,7 @@ Future<List<PostModel>> getUsers() async {
       throw Exception('Failed to load users');
     }
   } catch (e) {
-    print('Error al obtener usuarios: $e');
+    print('Error al obtener img: $e');
     throw e;
   }
 }
@@ -55,10 +55,10 @@ Future<List<PostModel>> getUsers() async {
         print(posts);
         return posts;
       } else {
-        throw Exception('Failed to load users');
+        throw Exception('Failed to load getVideo');
       }
     } catch (e) {
-      print('Error al obtener usuarios: $e');
+      print('Error al obtener getVideo: $e');
       throw e;
     }
   }
@@ -78,7 +78,7 @@ Future<List<PostModel>> getUsers() async {
         throw Exception('Failed to load users');
       }
     } catch (e) {
-      print('Error al obtener usuarios: $e');
+      print('Error al obtener getAudio: $e');
       throw e;
     }
   }
@@ -97,12 +97,30 @@ Future<List<PostModel>> getUsers() async {
         throw Exception('Failed to load users');
       }
     } catch (e) {
-      print('Error al obtener usuarios: $e');
+      print('Error al obtener getGif: $e');
       throw e;
     }
   }
 
+  @override
+  Future<List<PostModel>> getPdf() async {
+    try {
+      var response = await http.get(Uri.parse('$_baseUrl/publication/pdf'));
+      if (response.statusCode == 200) {
+        List<PostModel> posts = (jsonDecode(response.body) as List)
+            .map((post) => PostModel.fromJson(post))
+            .toList();
 
+        print(posts);
+        return posts;
+      } else {
+        throw Exception('Failed to load users');
+      }
+    } catch (e) {
+      print('Error al obtener getGif: $e');
+      throw e;
+    }
+  }
   @override
   Future<void> createpublication(createModel user) async {
   final url = '$_baseUrl/publication/publish';

@@ -1,0 +1,81 @@
+           Container(
+                  width: MediaQuery.of(context).size.width * 0.9,
+                  decoration: BoxDecoration(
+                    color: Color.fromARGB(255, 39, 66, 88),
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            CircleAvatar(
+                              radius: 30,
+                              backgroundImage:
+                                  AssetImage('assets/images/perfil.jpg'),
+                            ),
+                            SizedBox(width: 16),
+                            Expanded(
+                              child: TextFormField(
+                                decoration: InputDecoration(
+                                  hintText: 'Agrega publicación',
+                                  hintStyle: TextStyle(
+                                      color: const Color.fromARGB(
+                                          255, 114, 100, 100)),
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                  ),
+                                ),
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 16),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            ElevatedButton(
+                              onPressed: () async {
+                                // Acción del botón "Archivo"
+                                String? filePath =
+                                    await FilePicker.platform.pickFiles(
+                                  type: FileType.custom,
+                                  allowedExtensions: [
+                                    'pdf',
+                                    'gif',
+                                    'jpg',
+                                    'jpeg',
+                                    'png',
+                                    'mp4',
+                                    'mp3',
+                                  ],
+                                )?.then((result) => result?.files.single.path);
+
+                                if (filePath != null) {
+                                  // Aquí puedes utilizar el filePath según tus necesidades
+                                  print('Archivo seleccionado: $filePath');
+                                }
+                              },
+                              style: ElevatedButton.styleFrom(
+                                primary: Color.fromARGB(255, 250, 84, 18),
+                              ),
+                              child: Text('Archivo'),
+                            ),
+                            ElevatedButton(
+                              onPressed: () {
+                                // Acción del botón "Publicar" (puedes agregar lógica aquí)
+                              },
+                              style: ElevatedButton.styleFrom(
+                                primary: Color.fromARGB(255, 250, 84, 18),
+                              ),
+                              child: Text('Publicar'),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),

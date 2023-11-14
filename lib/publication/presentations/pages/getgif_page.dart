@@ -102,7 +102,7 @@ class _GetGifPageState extends State<GetGifPage> {
                   return Container(
                     margin: EdgeInsets.all(10.0),
                     child: SocialCardC(
-                      username: posts[index].userFullName,
+                      username: posts[index].userProfile,
                       userImage: posts[index].multimedia,
                       postImage: posts[index].multimedia,
                       description: posts[index].description,

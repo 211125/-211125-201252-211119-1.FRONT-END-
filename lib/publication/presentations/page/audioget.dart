@@ -1,3 +1,5 @@
+
+//
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:audioplayers/audioplayers.dart';
@@ -8,6 +10,7 @@ import '../../data/models/getuser_model.dart';
 import '../bloc/getaudio/getaudio_bloc.dart';
 import '../bloc/getaudio/getaudio_event.dart';
 import '../bloc/getaudio/getaudio_state.dart';
+
 
 class GetAudioPage extends StatefulWidget {
   @override
@@ -24,6 +27,7 @@ class _GetAudioPageState extends State<GetAudioPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+
       body: Center(
         child: BlocBuilder<GetaudioBloc, GetaudioState>(
           builder: (context, state) {
@@ -36,11 +40,7 @@ class _GetAudioPageState extends State<GetAudioPage> {
               return ListView.builder(
                 itemCount: posts.length,
                 itemBuilder: (context, index) {
-                return Padding(
-                  padding: const EdgeInsets.only(bottom: 16.0), // Add margin/padding here
-                  child: AudioItemWidget(post: posts[index]),
-                );
-
+                  return AudioItemWidget(post: posts[index]);
                 },
               );
             } else if (state is GetaudioErrorState) {
@@ -51,10 +51,11 @@ class _GetAudioPageState extends State<GetAudioPage> {
           },
         ),
       ),
+
+
     );
   }
 }
-
 class AudioItemWidget extends StatefulWidget {
   final PostModel post;
 
@@ -62,11 +63,11 @@ class AudioItemWidget extends StatefulWidget {
 
   @override
   _AudioItemWidgetState createState() => _AudioItemWidgetState();
-}
-
-class _AudioItemWidgetState extends State<AudioItemWidget> {
+}class _AudioItemWidgetState extends State<AudioItemWidget> {
   late AudioPlayer player;
   bool isPlaying = false;
+  bool isLiked = false; // Nuevo estado para el botón de "Me gusta"
+  int likeCount = 0; // Contador de Me gusta
   double currentPos = 0;
   double maxDuration = 0;
 
@@ -94,51 +95,22 @@ class _AudioItemWidgetState extends State<AudioItemWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-     // onTap: () => _showBottomSheet(context),
-      child: Container(
-
-        width: MediaQuery.of(context).size.width * 0.9,
-        decoration: BoxDecoration(
-          color: Color.fromARGB(255, 39, 66, 88),
-          borderRadius: BorderRadius.circular(10.0),
-        ),
-
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Container(
-                    width: 60,
-                    height: 60,
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(10.0),
-                      child: Image.asset(
-                        'assets/images/perfil.jpg',
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
-                  SizedBox(width: 16),
-                  Expanded(
-                    child: Text(
-                      widget.post.description,
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ),
-                  Positioned(
-                    top: 56,
-                    child: CircleAvatar(
-                      radius: 15,
-                      backgroundImage: AssetImage('assets/images/perfil.jpg'),
-                    ),
-                  ),
-                ],
+    return Card(
+      margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+      child: Padding(
+        padding: EdgeInsets.all(8.0),
+        child: Column(
+          children: [
+            ListTile(
+              title: Text(
+                widget.post.description,
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.normal),
               ),
-              Row(
+              subtitle: Text(
+                widget.post.userProfile,
+                style: TextStyle(fontSize: 14, fontWeight: FontWeight.w300),
+              ),
+              trailing: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
 
@@ -155,46 +127,20 @@ class _AudioItemWidgetState extends State<AudioItemWidget> {
                       });
                     },
                   ),
-                  Slider(
-                    value: currentPos,
-                    min: 0,
-                    max: maxDuration,
-                    onChanged: (value) {
-                      player.seek(Duration(milliseconds: value.toInt()));
-                    },
-                  ),
                 ],
               ),
-
-              SizedBox(height: 16),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Comentar',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.favorite,
-                        color: Colors.red,
-                      ),
-                      SizedBox(width: 5),
-                      Text(
-                        '23',
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ],
-          ),
+            ),
+            Slider(
+              value: currentPos,
+              min: 0,
+              max: maxDuration,
+              onChanged: (value) {
+                player.seek(Duration(milliseconds: value.toInt()));
+              },
+            ),
+          ],
         ),
       ),
     );
   }
-
-
 }

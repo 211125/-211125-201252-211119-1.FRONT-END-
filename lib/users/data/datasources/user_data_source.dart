@@ -16,7 +16,7 @@ abstract class UserLocalDataSource {
 }
 
 class UserLocalDataSourceImp implements UserLocalDataSource {
-  final String _baseUrl = 'https://plv3w7fl-3000.usw3.devtunnels.ms';
+  final String _baseUrl = 'http://192.168.1.73:3000';
   //  Future<void> createUser(UserModel user) async {
   @override
   Future<void> createUser(UserModel user) async {

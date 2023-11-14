@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 
-void main() {
-  runApp(BottomSheetApp());
-}
+import '../publication/presentations/pages/getPdf_page.dart';
+import '../publication/presentations/pages/getaudio_page.dart';
 
 class BottomSheetApp extends StatelessWidget {
   const BottomSheetApp({super.key});
@@ -14,7 +13,7 @@ class BottomSheetApp extends StatelessWidget {
       home: Scaffold(
         appBar: AppBar(
           title: Text(
-            'Foro',
+            'Foro1',
             style: TextStyle(color: const Color.fromARGB(255, 0, 0, 0)),
           ),
           centerTitle: true,
@@ -26,10 +25,14 @@ class BottomSheetApp extends StatelessWidget {
             ),
             onPressed: () {},
           ),
-          elevation:
-              0.0, // Establecer la elevación a 0 para eliminar el sombreado
+          elevation: 0.0, // Elimina el sombreado de la AppBar
         ),
-        body: BottomSheetExample(),
+        body: Column(
+          children: [
+            Expanded(child: Getpdf_page()),
+            Expanded(child: BottomSheetExample()),
+          ],
+        ),
       ),
     );
   }
@@ -37,248 +40,35 @@ class BottomSheetApp extends StatelessWidget {
 
 class BottomSheetExample extends StatelessWidget {
   BottomSheetExample({Key? key}) : super(key: key);
-
-void _showBottomSheet(BuildContext context) {
-  double screenHeight = MediaQuery.of(context).size.height;
-
-  showModalBottomSheet<void>(
-    isScrollControlled: true,
-    context: context,
-    builder: (BuildContext context) {
-      return SingleChildScrollView(
-        child: Container(
-          color: Color.fromARGB(255, 39, 66, 88),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              GestureDetector(
-                behavior: HitTestBehavior.opaque,
-                onVerticalDragDown: (_) {},
-                onVerticalDragEnd: (_) {},
-                child: Container(
-                  width: 40,
-                  height: 5,
-                  margin: EdgeInsets.symmetric(vertical: 10),
-                  decoration: BoxDecoration(
-                    color: Color.fromARGB(255, 255, 255, 255),
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                ),
-              ),
-              Container(
-                height: screenHeight,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    const Text('Modal BottomSheet'),
-                    ElevatedButton(
-                      child: const Text('Close BottomSheet'),
-                      onPressed: () => Navigator.pop(context),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-      );
-    },
-  );
-}
-
-
-  int _currentIndex = 2; // Índice correspondiente al ítem del foro
+  int _currentIndex = 2; // Índice del ítem del foro
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Scaffold(
-          body: Center(
-            child: Column(
-              children: [
-                SizedBox(height: 20),
-                Container(
-                  width: MediaQuery.of(context).size.width * 0.9,
-                  decoration: BoxDecoration(
-                    color: Color.fromARGB(255, 39, 66, 88),
-                    borderRadius: BorderRadius.circular(10.0),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            CircleAvatar(
-                              radius: 30,
-                              backgroundImage:
-                                  AssetImage('assets/images/perfil.jpg'),
-                            ),
-                            SizedBox(width: 16),
-                            Expanded(
-                              child: TextFormField(
-                                decoration: InputDecoration(
-                                  hintText: 'Agrega publicación',
-                                  hintStyle: TextStyle(
-                                      color: const Color.fromARGB(
-                                          255, 114, 100, 100)),
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10.0),
-                                  ),
-                                ),
-                                style: TextStyle(color: Colors.white),
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 16),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            ElevatedButton(
-                              onPressed: () async {
-                                // Acción del botón "Archivo"
-                                String? filePath =
-                                    await FilePicker.platform.pickFiles(
-                                  type: FileType.custom,
-                                  allowedExtensions: [
-                                    'pdf',
-                                    'gif',
-                                    'jpg',
-                                    'jpeg',
-                                    'png',
-                                    'mp4',
-                                    'mp3',
-                                  ],
-                                )?.then((result) => result?.files.single.path);
-
-                                if (filePath != null) {
-                                  // Aquí puedes utilizar el filePath según tus necesidades
-                                  print('Archivo seleccionado: $filePath');
-                                }
-                              },
-                              style: ElevatedButton.styleFrom(
-                                primary: Color.fromARGB(255, 250, 84, 18),
-                              ),
-                              child: Text('Archivo'),
-                            ),
-                            ElevatedButton(
-                              onPressed: () {
-                                // Acción del botón "Publicar" (puedes agregar lógica aquí)
-                              },
-                              style: ElevatedButton.styleFrom(
-                                primary: Color.fromARGB(255, 250, 84, 18),
-                              ),
-                              child: Text('Publicar'),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                SizedBox(height: 16),
-                InkWell(
-                  onTap: () => _showBottomSheet(context),
-                  child: Container(
-                    width: MediaQuery.of(context).size.width * 0.9,
-                    decoration: BoxDecoration(
-                      color: Color.fromARGB(255, 39, 66, 88),
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              Container(
-                                width: 60,
-                                height: 60,
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(10.0),
-                                  child: Image.asset(
-                                    'assets/images/perfil.jpg',
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                              ),
-                              SizedBox(width: 16),
-                              Expanded(
-                                child: Text(
-                                  '¿Saben qué es un egreso pasivo?',
-                                  style: TextStyle(color: Colors.white),
-                                ),
-                              ),
-                              Positioned(
-                                top: 56,
-                                child: CircleAvatar(
-                                  radius: 15,
-                                  backgroundImage:
-                                      AssetImage('assets/images/perfil.jpg'),
-                                ),
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: 16),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                'Comentar',
-                                style: TextStyle(color: Colors.white),
-                              ),
-                              Row(
-                                children: [
-                                  Icon(
-                                    Icons.favorite,
-                                    color: Colors.red,
-                                  ),
-                                  SizedBox(width: 5),
-                                  Text(
-                                    '23',
-                                    style: TextStyle(color: Colors.white),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
+    return Scaffold(
+      bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: const Color.fromARGB(255, 94, 0, 110),
+        selectedItemColor: Colors.amber,
+        unselectedItemColor: Color.fromARGB(255, 99, 93, 93),
+        currentIndex: _currentIndex,
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
           ),
-          bottomNavigationBar: BottomNavigationBar(
-            backgroundColor: const Color.fromARGB(255, 94, 0, 110),
-            selectedItemColor: Colors.amber,
-            unselectedItemColor: Color.fromARGB(255, 99, 93, 93),
-            // selectedIconTheme: IconThemeData(   color: Colors.white),
-            currentIndex: _currentIndex,
-            items: [
-              BottomNavigationBarItem(
-                icon: Icon(Icons.home),
-                label: 'Home',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.settings),
-                label: 'Setting',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.forum),
-                label: 'Foro',
-              ),
-            ],
-            onTap: (index) {
-              //setState(() {
-              //_currentIndex = index;
-              //});
-            },
-          )),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.settings),
+            label: 'Setting',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.forum),
+            label: 'Foro',
+          ),
+        ],
+        onTap: (index) {
+          // Aquí puedes cambiar el índice actual
+          // _currentIndex = index; (Necesitarás un StatefulWidget para esto)
+        },
+      ),
     );
   }
 }

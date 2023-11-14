@@ -8,6 +8,7 @@ abstract class PoshRepository {
   Future<void> createpublication(createModel user);
   Future<List<PostModel>> getVideo();
   Future<List<PostModel>> getAudio();
+  Future<List<PostModel>> getPdf();
 
   Future<List<PostModel>> getGif();
 

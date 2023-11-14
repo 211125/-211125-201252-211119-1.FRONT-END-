@@ -17,8 +17,18 @@ import '../bloc/getaudio/getaudio_state.dart';
 
 
 
+class prueba extends StatefulWidget {
+  @override
+  _prueba createState() => _prueba();
+}
 
-class prueba extends StatelessWidget {
+class _prueba extends State<prueba> {
+
+  @override
+  void initState() {
+    super.initState();
+    BlocProvider.of<GetaudioBloc>(context).add(FetchaudioEvent());
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -54,13 +64,7 @@ class prueba extends StatelessWidget {
           },
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          BlocProvider.of<GetaudioBloc>(context).add(FetchaudioEvent());
-        },
-        tooltip: 'Fetch Posts',
-        child: Icon(Icons.file_download),
-      ),
+
     );
   }
 }

@@ -6,8 +6,8 @@ class PostModel extends Post {
     required String userId,
     required String description,
     required String multimedia,
-    required String userFullName
-  }) : super(id: id, userId: userId,description:description,multimedia:multimedia,userFullName:userFullName);
+    required String userProfile
+  }) : super(id: id, userId: userId,description:description,multimedia:multimedia,userProfile:userProfile);
 
   factory PostModel.fromJson(Map<String, dynamic> json) {
     return PostModel(
@@ -15,7 +15,7 @@ class PostModel extends Post {
       userId: json['userId'],
       description: json['description'],
       multimedia: json['multimedia'],
-      userFullName: json['userFullName']
+      userProfile: json['userProfile']
     );
   }
 
@@ -25,7 +25,7 @@ class PostModel extends Post {
       userId: post.userId,
       description: post.description,
       multimedia: post.multimedia,
-      userFullName: post.userFullName
+      userProfile: post.userProfile
     );
   }
   Map<String, dynamic> toJson() {
@@ -34,7 +34,7 @@ class PostModel extends Post {
       'userId': userId,
       'description': description,
       'multimedia': multimedia,
-      'userFullName':userFullName
+      'userProfile':userProfile
     };
   }
 }

@@ -6,17 +6,21 @@ import 'package:flutter_application_1/publication/domain/repositories/user_repos
 import 'package:flutter_application_1/publication/presentations/bloc/createpost/createpost_bloc.dart';
 import 'package:flutter_application_1/publication/presentations/bloc/getaudio/getaudio_bloc.dart';
 import 'package:flutter_application_1/publication/presentations/bloc/getgif/getgif_bloc.dart';
+import 'package:flutter_application_1/publication/presentations/bloc/getpdf/getpdf_bloc.dart';
 import 'package:flutter_application_1/publication/presentations/bloc/getpost/getpost_bloc.dart';
 import 'package:flutter_application_1/publication/presentations/bloc/getvideo/getvideo_bloc.dart';
 import 'package:flutter_application_1/publication/presentations/pages/_audio.dart';
 import 'package:flutter_application_1/publication/presentations/pages/createpost_page.dart';
+import 'package:flutter_application_1/publication/presentations/pages/getPdf_page.dart';
 import 'package:flutter_application_1/publication/presentations/pages/getPost_page.dart';
 import 'package:flutter_application_1/publication/presentations/pages/getVideo_page.dart';
 import 'package:flutter_application_1/publication/presentations/pages/getaudio_page.dart';
 import 'package:flutter_application_1/publication/presentations/pages/getgif_page.dart';
+import 'package:flutter_application_1/publication/presentations/pages/getprueba.dart';
 import 'package:flutter_application_1/reactioncase_config.dart';
 import 'package:flutter_application_1/users/presentations/page/postLogin_page.dart';
 import 'package:flutter_application_1/userscase_config.dart';
+import 'movil/interfaz.dart';
 import 'reaction/presentations/blocs/getReaction/getReaction_bloc.dart';
 import 'reaction/presentations/blocs/poshReaction/poshReaction_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -69,6 +73,12 @@ void main() {
               getgitUseCase: postcaseConfig.getgitUseCase
           ),
         ),
+
+        BlocProvider<GetpdfBloc>(
+          create: (context) => GetpdfBloc(
+              getpdfUseCase: postcaseConfig.getpdfUseCase
+          ),
+        ),
 //User
         BlocProvider<CreateUserBloc>(
           create: (context) => CreateUserBloc(
@@ -107,7 +117,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: LoginPage(),
+      home: BottomSheetApp(),
     );
   }
 }

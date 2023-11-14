@@ -87,7 +87,7 @@ class _GetVideoPageState extends State<GetVideoPage> {
                     subtitle: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('By: ${posts[index].userFullName}'),
+                        Text('By: ${posts[index].userProfile}'),
                         GestureDetector(
                           onTap: () {
                             Navigator.push(
