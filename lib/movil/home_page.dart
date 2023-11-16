@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 
-void main() {
-  runApp(Home_page());
+import '../publication/presentations/pages/getVideo_page.dart';
+
+  class Home_page extends StatefulWidget {
+  @override
+  _Home createState() => _Home();
 }
 
-class Home_page extends StatelessWidget {
+class _Home extends State<Home_page>  {
+  int _currentIndex = 0;
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -26,34 +31,33 @@ class Home_page extends StatelessWidget {
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(20.0),
-                      child: Container(
-                        width: 60,
-                        height: 60,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          shape: BoxShape.rectangle,
-                          borderRadius: BorderRadius.circular(10.0),
-                        ),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.account_balance_sharp,
-                              color: Color.fromARGB(255, 255, 187, 0),
-                              size: 40,
-                            ),
-                            Text(
-                              'Depósito',
-                              style:
-                                  TextStyle(color: Colors.yellow, fontSize: 12),
-                            ),
-                          ],
-                        ),
+                  children: [Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: Container(
+                      width: 60,
+                      height: 60,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        shape: BoxShape.rectangle,
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Image.asset(
+                            'assets/images/deposito.png',
+                            width: 40,
+                            height: 40,
+                          ),
+                          Text(
+                            'Depósito',
+                            style: TextStyle(color: Colors.yellow, fontSize: 12),
+                          ),
+                        ],
                       ),
                     ),
+                  ),
+
                     Padding(
                       padding: const EdgeInsets.all(20.0),
                       child: Text(
@@ -87,10 +91,10 @@ class Home_page extends StatelessWidget {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(
-                          Icons.swap_horizontal_circle_outlined,
-                          color: Color.fromARGB(255, 255, 187, 0),
-                          size: 40,
+                        Image.asset(
+                          'assets/images/expense.png',
+                          width: 40,
+                          height: 40,
                         ),
                         Text(
                           'Gastos',
@@ -107,10 +111,10 @@ class Home_page extends StatelessWidget {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(
-                          Icons.receipt_long,
-                          color: Color.fromARGB(255, 255, 187, 0),
-                          size: 40,
+                        Image.asset(
+                          'assets/images/grafica.png',
+                          width: 40,
+                          height: 40,
                         ),
                         Text(
                           'Gráfica',
@@ -246,27 +250,47 @@ class Home_page extends StatelessWidget {
           ),
         ),
         bottomNavigationBar: BottomNavigationBar(
-          // currentIndex: _currentIndex,
-          backgroundColor: const Color.fromARGB(255, 94, 0,
-              110), // Color morado para el fondo de la barra de navegación
-          selectedItemColor:
-              Colors.amber, // Color amarillo para el ítem seleccionado
+          backgroundColor: const Color.fromARGB(255, 94, 0, 110),
+          selectedItemColor: Colors.amber,
+          unselectedItemColor: Color.fromARGB(255, 99, 93, 93),
+          currentIndex: _currentIndex,
           items: [
             BottomNavigationBarItem(
               icon: Icon(Icons.home),
               label: 'Home',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.settings),
-              label: 'Setting',
-            ),
-            BottomNavigationBarItem(
               icon: Icon(Icons.forum),
               label: 'Foro',
             ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.settings),
+              label: 'Setting',
+            ),
           ],
-          onTap: (index) {},
+          onTap: (index) {
+            setState(() {
+              _currentIndex = index;
+            });
+            switch (index) {
+              case 0:
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => Home_page()),
+                );                break;
+              case 1:
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => GetVideoPage()),
+                );
+                break;
+              case 2:
+              //  Navigator.pushReplacementNamed(context, '/SettingsPage');
+                break;
+            }
+          },
         ),
+
       ),
     );
   }

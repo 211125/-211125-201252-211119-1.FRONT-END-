@@ -55,8 +55,8 @@ class _CreatePostPageState extends State<CreatePostPage> {
                     );
                     if (result != null) {
                       PlatformFile file = result.files.first;
-                      if (file.extension == 'jpg' || file.extension == 'png' || file.extension == 'gif'|| file.extension == 'mp3' || file.extension == 'mp4') {
-                        // Para archivos de imagen
+                      if (file.extension == 'jpg' || file.extension == 'png' || file.extension == 'gif'|| file.extension == 'mp3' || file.extension == 'mp4'|| file.extension == 'pdf') {
+
                         setState(() {
                           _imagePath = file.path;
                         });

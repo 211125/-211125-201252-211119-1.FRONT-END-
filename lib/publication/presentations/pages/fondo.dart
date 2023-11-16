@@ -37,9 +37,9 @@ class _SocialCardState extends State<SocialCardC> {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        border: Border.all(color: Colors.purple, width: 2.0), // Agrega el borde
+       // border: Border.all(color: Colors.purple, width: 2.0), // Agrega el borde
         borderRadius: BorderRadius.circular(12.0), // Ajusta el radio del borde
-        color: Color.fromARGB(255, 209, 118, 223), // Ajusta el color de fondo a morado
+        color: Color.fromARGB(255, 39, 66, 88),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

@@ -1,13 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:audioplayers/audioplayers.dart';
+import '../../../movil/addpuc.dart';
+import '../../../movil/home_page.dart';
 import '../../../reaction/data/models/post_login.dart';
 import '../../../reaction/presentations/blocs/poshReaction/poshReaction_bloc.dart';
 import '../../../reaction/presentations/blocs/poshReaction/poshReaction_event.dart';
 import '../../data/models/getuser_model.dart';
+import '../bloc/createpost/createpost_bloc.dart';
 import '../bloc/getaudio/getaudio_bloc.dart';
 import '../bloc/getaudio/getaudio_event.dart';
 import '../bloc/getaudio/getaudio_state.dart';
+import 'getPdf_page.dart';
+import 'getPost_page.dart';
+import 'getVideo_page.dart';
 
 class GetAudioPage extends StatefulWidget {
   @override
@@ -15,16 +21,112 @@ class GetAudioPage extends StatefulWidget {
 }
 
 class _GetAudioPageState extends State<GetAudioPage> {
+  int _currentIndex = 1; // Índice del ítem del foro
+
   @override
   void initState() {
     super.initState();
     BlocProvider.of<GetaudioBloc>(context).add(FetchaudioEvent());
   }
+  void _showadd(BuildContext context) {
+    showModalBottomSheet<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return Container(
+          height: MediaQuery.of(context).size.height * 0.8,
+          child: Post_Page(bloc: BlocProvider.of<CreatePostBloc>(context)),
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
+      appBar: AppBar(
+        title: Text(
+          'Foro',
+          style: TextStyle(color: Color.fromARGB(255, 0, 0, 0)),
+        ),
+        centerTitle: true,
+        backgroundColor: Color.fromARGB(255, 255, 255, 255),
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back,
+            color: Color.fromARGB(255, 0, 0, 0),
+          ),
+          onPressed: () {
+            // Acción para el botón de atrás
+          },
+        ),
+        elevation: 0.0, // Elimina el sombreado de la AppBar
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.add, color: Color.fromARGB(255, 0, 0, 0)),
+            onPressed: () {
+              _showadd(context);
+            },
+          ),
+          PopupMenuButton<String>(
+            icon: Icon(Icons.more_vert, color: Color.fromARGB(255, 0, 0, 0)), // Icono de menú en negro
+            onSelected: (String result) {
+              switch (result) {
+                case 'PDF':
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => Getpdf_page()),
+                  );
+                  break;
+
+                case 'Video':
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => GetVideoPage()),
+                  );
+                  break;
+                case 'Imagen':
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => foto()),
+                  );                  break;
+                case 'Audio':
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => GetAudioPage()),
+                  );                    break;
+                case 'Publicación':
+                // Navegar a Publicacion_page
+                  break;
+              }
+            },
+            itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+              const PopupMenuItem<String>(
+                value: 'PDF',
+                child: Text('PDF'),
+              ),
+              const PopupMenuItem<String>(
+                value: 'Video',
+                child: Text('Video'),
+              ),
+              const PopupMenuItem<String>(
+                value: 'Imagen',
+                child: Text('Imagen'),
+              ),
+              const PopupMenuItem<String>(
+                value: 'Audio',
+                child: Text('Audio'),
+              ),
+              const PopupMenuItem<String>(
+                value: 'Publicación',
+                child: Text('Publicación'),
+              ),
+            ],
+          ),
+        ],
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0), // Establecer el margen deseado
+
         child: BlocBuilder<GetaudioBloc, GetaudioState>(
           builder: (context, state) {
             if (state is GetaudioInitialState) {
@@ -50,6 +152,47 @@ class _GetAudioPageState extends State<GetAudioPage> {
             }
           },
         ),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: const Color.fromARGB(255, 94, 0, 110),
+        selectedItemColor: Colors.amber,
+        unselectedItemColor: Color.fromARGB(255, 99, 93, 93),
+        currentIndex: _currentIndex,
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.forum),
+            label: 'Foro',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.settings),
+            label: 'Setting',
+          ),
+        ],
+        onTap: (index) {
+          setState(() {
+            _currentIndex = index;
+          });
+          switch (index) {
+            case 0:
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => Home_page()),
+              );                break;
+            case 1:
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => GetVideoPage()),
+              );
+              break;
+            case 2:
+            //  Navigator.pushReplacementNamed(context, '/SettingsPage');
+              break;
+          }
+        },
       ),
     );
   }

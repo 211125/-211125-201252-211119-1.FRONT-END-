@@ -13,7 +13,7 @@ class BottomSheetApp extends StatelessWidget {
       home: Scaffold(
         appBar: AppBar(
           title: Text(
-            'Foro1',
+            'Foro',
             style: TextStyle(color: const Color.fromARGB(255, 0, 0, 0)),
           ),
           centerTitle: true,
@@ -29,7 +29,7 @@ class BottomSheetApp extends StatelessWidget {
         ),
         body: Column(
           children: [
-            Expanded(child: Getpdf_page()),
+            Expanded(child: GetAudioPage()),
             Expanded(child: BottomSheetExample()),
           ],
         ),

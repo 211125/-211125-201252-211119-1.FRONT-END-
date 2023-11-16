@@ -1,178 +1,92 @@
-/*import 'package:fl_chart_app/presentation/resources/app_resources.dart';
-import 'package:fl_chart/fl_chart.dart';
-import 'package:fl_chart_app/presentation/widgets/indicator.dart';
 import 'package:flutter/material.dart';
+import 'package:fl_chart/fl_chart.dart';
 
-void main() => runApp(MyApp());
-
-class MyApp extends StatelessWidget {
+class Grafica_page extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Pie Chart Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: PieChartSample2(),
-    );
-  }
-}
-class PieChartSample2 extends StatefulWidget {
-  const PieChartSample2({super.key});
-
-  @override
-  State<StatefulWidget> createState() => PieChart2State();
-}
-
-class PieChart2State extends State {
-  int touchedIndex = -1;
-
-  @override
-  Widget build(BuildContext context) {
-    return AspectRatio(
-      aspectRatio: 1.3,
-      child: Row(
-        children: <Widget>[
-          const SizedBox(
-            height: 18,
-          ),
-          Expanded(
-            child: AspectRatio(
-              aspectRatio: 1,
+      home: Scaffold(
+        appBar: AppBar(
+          title: Text('Gráfico de Pastel'),
+        ),
+        body: Column(
+          children: [
+            Container(
+              height: 300,  // Ajusta esta altura según sea necesario
               child: PieChart(
                 PieChartData(
-                  pieTouchData: PieTouchData(
-                    touchCallback: (FlTouchEvent event, pieTouchResponse) {
-                      setState(() {
-                        if (!event.isInterestedForInteractions ||
-                            pieTouchResponse == null ||
-                            pieTouchResponse.touchedSection == null) {
-                          touchedIndex = -1;
-                          return;
-                        }
-                        touchedIndex = pieTouchResponse
-                            .touchedSection!.touchedSectionIndex;
-                      });
-                    },
-                  ),
-                  borderData: FlBorderData(
-                    show: false,
-                  ),
                   sectionsSpace: 0,
                   centerSpaceRadius: 40,
-                  sections: showingSections(),
+                  sections: [
+                    PieChartSectionData(
+                      color: Color.fromARGB(255, 115, 182, 248),
+                      value: 40,
+                      title: 'Comida',
+                      radius: 50,
+                      titleStyle: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: const Color(0xffffffff)),
+                    ),
+                    PieChartSectionData(
+                      color: Color.fromARGB(255, 246, 93, 146),
+                      value: 30,
+                      title: 'Transporte',
+                      radius: 50,
+                      titleStyle: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: const Color(0xffffffff)),
+                    ),
+                    PieChartSectionData(
+                      color: Color.fromARGB(255, 255, 16, 96),
+                      value: 20,
+                      title: 'Renta',
+                      radius: 50,
+                      titleStyle: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: const Color(0xffffffff)),
+                    ),
+                    PieChartSectionData(
+                      color: Color.fromARGB(255, 122, 250, 151),
+                      value: 10,
+                      title: 'Otros',
+                      radius: 50,
+                      titleStyle: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: const Color(0xffffffff)),
+                    ),
+                  ],
                 ),
               ),
             ),
-          ),
-          const Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Indicator(
-                color: AppColors.contentColorBlue,
-                text: 'First',
-                isSquare: true,
+            SizedBox(height: 20),
+            Container(
+              padding: EdgeInsets.all(10),
+              child: Column(
+                children: [
+                  LegendItem(color: Color.fromARGB(255, 115, 182, 248), label: 'Comida'),
+                  LegendItem(color: Color.fromARGB(255, 246, 93, 146), label: 'Transporte'),
+                  LegendItem(color: Color.fromARGB(255, 255, 16, 96), label: 'Renta'),
+                  LegendItem(color: Color.fromARGB(255, 122, 250, 151), label: 'Otros'),
+                ],
               ),
-              SizedBox(
-                height: 4,
-              ),
-              Indicator(
-                color: AppColors.contentColorYellow,
-                text: 'Second',
-                isSquare: true,
-              ),
-              SizedBox(
-                height: 4,
-              ),
-              Indicator(
-                color: AppColors.contentColorPurple,
-                text: 'Third',
-                isSquare: true,
-              ),
-              SizedBox(
-                height: 4,
-              ),
-              Indicator(
-                color: AppColors.contentColorGreen,
-                text: 'Fourth',
-                isSquare: true,
-              ),
-              SizedBox(
-                height: 18,
-              ),
-            ],
-          ),
-          const SizedBox(
-            width: 28,
-          ),
-        ],
+            ),
+          ],
+        ),
       ),
     );
   }
+}
 
-  List<PieChartSectionData> showingSections() {
-    return List.generate(4, (i) {
-      final isTouched = i == touchedIndex;
-      final fontSize = isTouched ? 25.0 : 16.0;
-      final radius = isTouched ? 60.0 : 50.0;
-      const shadows = [Shadow(color: Colors.black, blurRadius: 2)];
-      switch (i) {
-        case 0:
-          return PieChartSectionData(
-            color: AppColors.contentColorBlue,
-            value: 40,
-            title: '40%',
-            radius: radius,
-            titleStyle: TextStyle(
-              fontSize: fontSize,
-              fontWeight: FontWeight.bold,
-              color: AppColors.mainTextColor1,
-              shadows: shadows,
-            ),
-          );
-        case 1:
-          return PieChartSectionData(
-            color: AppColors.contentColorYellow,
-            value: 30,
-            title: '30%',
-            radius: radius,
-            titleStyle: TextStyle(
-              fontSize: fontSize,
-              fontWeight: FontWeight.bold,
-              color: AppColors.mainTextColor1,
-              shadows: shadows,
-            ),
-          );
-        case 2:
-          return PieChartSectionData(
-            color: AppColors.contentColorPurple,
-            value: 15,
-            title: '15%',
-            radius: radius,
-            titleStyle: TextStyle(
-              fontSize: fontSize,
-              fontWeight: FontWeight.bold,
-              color: AppColors.mainTextColor1,
-              shadows: shadows,
-            ),
-          );
-        case 3:
-          return PieChartSectionData(
-            color: AppColors.contentColorGreen,
-            value: 15,
-            title: '15%',
-            radius: radius,
-            titleStyle: TextStyle(
-              fontSize: fontSize,
-              fontWeight: FontWeight.bold,
-              color: AppColors.mainTextColor1,
-              shadows: shadows,
-            ),
-          );
-        default:
-          throw Error();
-      }
-    });
+class LegendItem extends StatelessWidget {
+  final Color color;
+  final String label;
+
+  LegendItem({required this.color, required this.label});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Container(
+          width: 20,
+          height: 20,
+          color: color,
+        ),
+        SizedBox(width: 5),
+        Text(label),
+      ],
+    );
   }
-}*/
+}

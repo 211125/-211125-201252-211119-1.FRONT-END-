@@ -6,21 +6,6 @@ import 'package:flutter_pdfview/flutter_pdfview.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:dio/dio.dart';
 
-void main() => runApp(MyApp());
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter PDF Viewer',
-      home: PDFViewerScreen(pdfUrls: [
-        "tu_primera_URL_de_PDF_aquí",
-        "tu_segunda_URL_de_PDF_aquí",
-        // Agrega más URLs aquí
-      ]),
-    );
-  }
-}
 
 class PDFViewerScreen extends StatefulWidget {
   final List<String> pdfUrls;

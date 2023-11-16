@@ -1,8 +1,4 @@
 import 'dart:async';
-
-import 'package:flutter/material.dart';
-import 'package:video_player/video_player.dart';
-import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 
@@ -34,38 +30,16 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
     super.dispose();
   }
 
-  void _playNextVideo() {
-    if (_currentIndex < widget.videoUrls.length - 1) {
-      setState(() {
-        _currentIndex++;
-        _controller = VideoPlayerController.network(widget.videoUrls[_currentIndex]);
-        _initializeVideoPlayerFuture = _controller.initialize();
-        _controller.setLooping(true);
-        _controller.play();
-      });
-    }
-  }
-
-  void _playPreviousVideo() {
-    if (_currentIndex > 0) {
-      setState(() {
-        _currentIndex--;
-        _controller = VideoPlayerController.network(widget.videoUrls[_currentIndex]);
-        _initializeVideoPlayerFuture = _controller.initialize();
-        _controller.setLooping(true);
-        _controller.play();
-      });
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: Color.fromARGB(255, 39, 66, 88),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
+            // Contenedor agregado con el color especificado
+
             AspectRatio(
               aspectRatio: 16 / 9,
               child: FutureBuilder(
@@ -106,29 +80,6 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
                   }
                 },
               ),
-            ),
-            const SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                FloatingActionButton(
-                  backgroundColor: Colors.white,
-                  onPressed: _playPreviousVideo,
-                  child: const Icon(
-                    Icons.skip_previous,
-                    color: Colors.black,
-                  ),
-                ),
-                const SizedBox(width: 16),
-                FloatingActionButton(
-                  backgroundColor: Colors.white,
-                  onPressed: _playNextVideo,
-                  child: const Icon(
-                    Icons.skip_next,
-                    color: Colors.black,
-                  ),
-                ),
-              ],
             ),
           ],
         ),

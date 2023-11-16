@@ -1,75 +1,209 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/publication/data/models/getuser_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../domain/usecases/getpost_usercase.dart.dart';
-import 'package:chewie/chewie.dart';
-import 'package:video_player/video_player.dart';
+import 'package:flutter_application_1/publication/data/models/getuser_model.dart';
+
+import '../../../movil/addpuc.dart';
+import '../../../movil/home_page.dart';
+import '../bloc/createpost/createpost_bloc.dart';
 import '../bloc/getvideo/getvideo_bloc.dart';
 import '../bloc/getvideo/getvideo_event.dart';
 import '../bloc/getvideo/getvideo_state.dart';
-import 'fondo.dart';
+import '../page/audioget.dart';
+import 'getPdf_page.dart';
 import 'getPost_page.dart';
-import 'getaudio_page.dart';
-import 'getgif_page.dart';
 import 'gifsocialcar.dart';
+import 'widgets/PDFViewerScreen.dart'; // Asegúrate de que esta es la ruta correcta
 
 class GetVideoPage extends StatefulWidget {
   @override
-  _GetVideoPageState createState() => _GetVideoPageState();
+  _getpdf createState() => _getpdf();
 }
 
-class _GetVideoPageState extends State<GetVideoPage> {
+class _getpdf extends State<GetVideoPage> {
   @override
   void initState() {
     super.initState();
     BlocProvider.of<GetvideoBloc>(context).add(FetchvideoEvent());
   }
+  int _currentIndex = 1; // Índice del ítem del foro
+  void _showadd(BuildContext context) {
+    showModalBottomSheet<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return Container(
+          height: MediaQuery.of(context).size.height * 0.8,
+          child: Post_Page(bloc: BlocProvider.of<CreatePostBloc>(context)),
+        );
+      },
+    );
+  }
+
+  void _showPdfModal(BuildContext context, String pdfUrl) {
+    showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true, // Permite que el modal cubra toda la pantalla
+      builder: (BuildContext context) {
+        // Datos ficticios de comentarios
+        final List<Map<String, String>> comments = [
+          {"username": "Usuario1", "comment": "Este es un gran video!"},
+          {"username": "Usuario2", "comment": "Muy informativo. Gracias."},
+          {"username": "Usuario1", "comment": "Este es un gran video!"},
+          {"username": "Usuario1", "comment": "Este es un gran video!"},
+          {"username": "Usuario1", "comment": "Este es un gran video!"},
+          {"username": "Usuario1", "comment": "Este es un gran video!"},
+          {"username": "Usuario1", "comment": "Este es un gran video!"},
+          {"username": "Usuario1", "comment": "Este es un gran video!"},
+        ];
+
+        return Container(
+          height: MediaQuery.of(context).size.height, // Usa la altura completa de la pantalla
+          child: Column(
+            children: <Widget>[
+              // Barra para indicar que se puede deslizar hacia abajo para cerrar
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                child: Container(
+                  width: 40.0,
+                  height: 4.0,
+                  decoration: BoxDecoration(
+                    color: Colors.grey[300],
+                    borderRadius: BorderRadius.circular(2.0),
+                  ),
+                ),
+              ),
+              // Contenido del modal
+              Expanded(
+                child: VideoPlayerScreen(videoUrls: [pdfUrl]),
+              ),
+              Container(
+                padding: EdgeInsets.all(8.0),
+                child: Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: TextField(
+                        decoration: InputDecoration(
+                          hintText: "Agregar tu comentario aquí!!",
+                          border: OutlineInputBorder(),
+                        ),
+                      ),
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.send),
+                      onPressed: () {
+                        // Aquí va la lógica para manejar el envío del comentario
+                      },
+                    ),
+                  ],
+                ),
+              ),              Expanded(
+                child: ListView.builder(
+                  itemCount: comments.length,
+                  itemBuilder: (context, index) {
+                    return ListTile(
+                      title: Text(comments[index]["username"] ?? ''),
+                      subtitle: Text(comments[index]["comment"] ?? ''),
+                    );
+                  },
+                ),
+              ),
+              // Campo para agregar comentario con botón de enviar
+
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Video'),
-        backgroundColor: Colors.purple,
+        title: Text(
+          'Foro',
+          style: TextStyle(color: Color.fromARGB(255, 0, 0, 0)),
+        ),
+        centerTitle: true,
+        backgroundColor: Color.fromARGB(255, 255, 255, 255),
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back,
+            color: Color.fromARGB(255, 0, 0, 0),
+          ),
+          onPressed: () {
+            // Acción para el botón de atrás
+          },
+        ),
+        elevation: 0.0, // Elimina el sombreado de la AppBar
         actions: <Widget>[
           IconButton(
-            icon: Icon(Icons.image),
+            icon: Icon(Icons.add, color: Color.fromARGB(255, 0, 0, 0)),
             onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => foto()),
-              );
+              _showadd(context);
             },
           ),
-          IconButton(
-            icon: Icon(Icons.audiotrack),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => GetAudioPage()),
-              );
+          PopupMenuButton<String>(
+            icon: Icon(Icons.more_vert, color: Color.fromARGB(255, 0, 0, 0)), // Icono de menú en negro
+            onSelected: (String result) {
+              switch (result) {
+                case 'PDF':
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => Getpdf_page()),
+                  );
+                  break;
+
+                case 'Video':
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => GetVideoPage()),
+                  );
+                  break;
+                case 'Imagen':
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => foto()),
+                  );                  break;
+                case 'Audio':
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => GetAudioPage()),
+                  );                    break;
+                case 'Publicación':
+                // Navegar a Publicacion_page
+                  break;
+              }
             },
-          ),
-          IconButton(
-            icon: Icon(Icons.animation),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => GetGifPage()),
-              );
-            },
-          ),
-          IconButton(
-            icon: Icon(Icons.video_collection),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => GetVideoPage()),
-              );
-            },
+            itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+              const PopupMenuItem<String>(
+                value: 'PDF',
+                child: Text('PDF'),
+              ),
+              const PopupMenuItem<String>(
+                value: 'Video',
+                child: Text('Video'),
+              ),
+              const PopupMenuItem<String>(
+                value: 'Imagen',
+                child: Text('Imagen'),
+              ),
+              const PopupMenuItem<String>(
+                value: 'Audio',
+                child: Text('Audio'),
+              ),
+              const PopupMenuItem<String>(
+                value: 'Publicación',
+                child: Text('Publicación'),
+              ),
+            ],
           ),
         ],
       ),
+
+
       body: Center(
         child: BlocBuilder<GetvideoBloc, GetvideoState>(
           builder: (context, state) {
@@ -82,35 +216,68 @@ class _GetVideoPageState extends State<GetVideoPage> {
               return ListView.builder(
                 itemCount: posts.length,
                 itemBuilder: (context, index) {
-                  return ListTile(
-                    title: Text(posts[index].description),
-                    subtitle: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('By: ${posts[index].userProfile}'),
-                        GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => VideoPlayerScreen(
-                                  videoUrls: [posts[index].multimedia],
+                  return InkWell(
+                    onTap: () => _showPdfModal(context, posts[index].multimedia),
+                    child: Container(
+                      margin: EdgeInsets.all(10), // Margen para cada publicación
+                      width: MediaQuery.of(context).size.width * 0.9,
+                      decoration: BoxDecoration(
+                        color: Color.fromARGB(255, 39, 66, 88),
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Container(
+                                  width: 60,
+                                  height: 60,
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                    child: Image.asset(
+                                      'assets/images/video3.png',
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
                                 ),
-                              ),
-                            );
-                          },
-                          child: Text('Play Video'),
+                                SizedBox(width: 16),
+                                Expanded(
+                                  child: Text(
+                                    posts[index].description,
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 16),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  'Comentar',
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                                Row(
+                                  children: [
+                                    Icon(
+                                      Icons.favorite,
+                                      color: Colors.red,
+                                    ),
+                                    SizedBox(width: 5),
+                                    Text(
+                                      '23', // Este número puede ser dinámico según tu modelo de datos
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 16),
+                          ],
                         ),
-                      ],
-                    ),
-                    trailing: IconButton(
-                      onPressed: () {
-                        // Aquí va tu lógica para manejar el evento de clic del icono de corazón.
-                        // Puede ser un cambio de estado, una función de manejo de datos, etc.
-                      },
-                      icon: Icon(
-                        Icons.favorite,
-                        color: Colors.red,
                       ),
                     ),
                   );
@@ -124,13 +291,48 @@ class _GetVideoPageState extends State<GetVideoPage> {
           },
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          print("hola mundo");
+      bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: const Color.fromARGB(255, 94, 0, 110),
+        selectedItemColor: Colors.amber,
+        unselectedItemColor: Color.fromARGB(255, 99, 93, 93),
+        currentIndex: _currentIndex,
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.forum),
+            label: 'Foro',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.settings),
+            label: 'Setting',
+          ),
+        ],
+        onTap: (index) {
+          setState(() {
+            _currentIndex = index;
+          });
+          switch (index) {
+            case 0:
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => Home_page()),
+              );                break;
+            case 1:
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => GetVideoPage()),
+              );
+              break;
+            case 2:
+            //  Navigator.pushReplacementNamed(context, '/SettingsPage');
+              break;
+          }
         },
-        tooltip: 'Fetch Posts',
-        child: Icon(Icons.file_download),
       ),
+
     );
   }
 }

@@ -53,6 +53,9 @@ dependencies:
   path_provider: ^2.0.14
   dio: ^5.3.3
   permission_handler: ^11.0.1
+  fl_chart: ^0.64.0
+
+
  # google_maps_flutter: ^2.0.0
 
 
@@ -91,7 +94,12 @@ flutter:
     - assets/pdf/pruevaFlutter.pdf
     - assets/images/icono2.png
     - assets/images/pdfIcono.png
-
+    - assets/images/deposito.png
+    - assets/images/expense.png
+    - assets/images/grafica.png
+    - assets/images/video.png
+    - assets/images/video2.png
+    - assets/images/video3.png
 
 
   # The following line ensures that the Material Icons font is

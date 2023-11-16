@@ -1,55 +1,40 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+/*import 'package:flutter/material.dart';
 import 'package:flutter_application_1/publication/data/models/getuser_model.dart';
-import '../../domain/usecases/getpost_usercase.dart.dart';
-
-
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-import '../bloc/getgif/getgif_bloc.dart';
-import '../bloc/getgif/getgif_event.dart';
-import '../bloc/getgif/getgif_state.dart';
+import '../../domain/usecases/getpost_usercase.dart.dart';
+import 'package:chewie/chewie.dart';
+import 'package:video_player/video_player.dart';
+import '../bloc/getvideo/getvideo_bloc.dart';
+import '../bloc/getvideo/getvideo_event.dart';
+import '../bloc/getvideo/getvideo_state.dart';
 import 'fondo.dart';
 import 'getPost_page.dart';
-import 'getVideo_page.dart';
-import 'getaudio_page.dart';import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_application_1/publication/data/models/getuser_model.dart';
-import '../../domain/usecases/getpost_usercase.dart.dart';
-
-import '../bloc/getgif/getgif_bloc.dart';
-import '../bloc/getgif/getgif_event.dart';
-import '../bloc/getgif/getgif_state.dart';
-import 'fondo.dart';
-import 'getPost_page.dart';
-import 'getVideo_page.dart';
 import 'getaudio_page.dart';
+import 'getgif_page.dart';
+import 'gifsocialcar.dart';
 
-class GetGifPage extends StatefulWidget {
+class GetVideoPage extends StatefulWidget {
   @override
-  _GetGifPageState createState() => _GetGifPageState();
+  _GetVideoPageState createState() => _GetVideoPageState();
 }
 
-class _GetGifPageState extends State<GetGifPage> {
+class _GetVideoPageState extends State<GetVideoPage> {
   @override
   void initState() {
     super.initState();
-    BlocProvider.of<GetgifBloc>(context).add(FetchgifEvent());
+    BlocProvider.of<GetvideoBloc>(context).add(FetchvideoEvent());
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
       appBar: AppBar(
-        title: Text('Images'),
-        backgroundColor: Colors.purple, // Cambia el color del AppBar a morado
+        title: Text('Video'),
+        backgroundColor: Colors.purple,
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.image),
             onPressed: () {
-              // Lógica para la opción de imagen
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => foto()),
@@ -59,7 +44,6 @@ class _GetGifPageState extends State<GetGifPage> {
           IconButton(
             icon: Icon(Icons.audiotrack),
             onPressed: () {
-              // Lógica para la opción de audio
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => GetAudioPage()),
@@ -69,7 +53,6 @@ class _GetGifPageState extends State<GetGifPage> {
           IconButton(
             icon: Icon(Icons.animation),
             onPressed: () {
-              // Lógica para la opción de animaciones
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => GetGifPage()),
@@ -79,7 +62,6 @@ class _GetGifPageState extends State<GetGifPage> {
           IconButton(
             icon: Icon(Icons.video_collection),
             onPressed: () {
-              // Lógica para la opción de video GetVideoPage
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => GetVideoPage()),
@@ -89,29 +71,52 @@ class _GetGifPageState extends State<GetGifPage> {
         ],
       ),
       body: Center(
-        child: BlocBuilder<GetgifBloc, GetgifState>(
+        child: BlocBuilder<GetvideoBloc, GetvideoState>(
           builder: (context, state) {
-            if (state is GetgifInitialState) {
+            if (state is GetvideoInitialState) {
               return Text('Press the button to fetch posts.');
-            } else if (state is GetgifLoadingState) {
+            } else if (state is GetvideoLoadingState) {
               return CircularProgressIndicator();
-            } else if (state is GetgifLoadedState) {
+            } else if (state is GetvideoLoadedState) {
               List<PostModel> posts = state.posts;
               return ListView.builder(
                 itemCount: posts.length,
                 itemBuilder: (context, index) {
-                  return Container(
-                    margin: EdgeInsets.all(10.0),
-                    child: SocialCardC(
-                      username: posts[index].userProfile,
-                      userImage: posts[index].multimedia,
-                      postImage: posts[index].multimedia,
-                      description: posts[index].description,
+                  return ListTile(
+                    title: Text(posts[index].description),
+                    subtitle: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('By: ${posts[index].userProfile}'),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => VideoPlayerScreen(
+                                  videoUrls: [posts[index].multimedia],
+                                ),
+                              ),
+                            );
+                          },
+                          child: Text('Play Video'),
+                        ),
+                      ],
+                    ),
+                    trailing: IconButton(
+                      onPressed: () {
+                        // Aquí va tu lógica para manejar el evento de clic del icono de corazón.
+                        // Puede ser un cambio de estado, una función de manejo de datos, etc.
+                      },
+                      icon: Icon(
+                        Icons.favorite,
+                        color: Colors.red,
+                      ),
                     ),
                   );
                 },
               );
-            } else if (state is GetgifErrorState) {
+            } else if (state is GetvideoErrorState) {
               return Text('Error occurred: ${state.error}');
             } else {
               return Container();
@@ -121,12 +126,12 @@ class _GetGifPageState extends State<GetGifPage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          BlocProvider.of<GetgifBloc>(context).add(FetchgifEvent());
+          print("hola mundo");
         },
         tooltip: 'Fetch Posts',
         child: Icon(Icons.file_download),
-        backgroundColor: Colors.purple, // Cambia el color del botón a morado
       ),
     );
   }
 }
+*/
