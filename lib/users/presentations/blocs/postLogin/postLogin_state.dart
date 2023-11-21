@@ -1,20 +1,22 @@
+part of 'postLogin_bloc.dart';
 
-import '../../../domain/entities/userLogin.dart';
-
-abstract class PostLoginState {}
-
-class PostLoginInitial extends PostLoginState {}
-
-class PostLoginLoading extends PostLoginState {}
-
-class PostLoginSuccess extends PostLoginState {
-  final UserLogin? user;
-
-   PostLoginSuccess(this.user);
+@immutable
+abstract class InicioState{
+  @override
+  List<Object?> get props => [];
 }
 
-class PostLoginFailure extends PostLoginState {
-  final String message;
+class InicioInitial extends InicioState {}
 
-  PostLoginFailure({required this.message});
+class InicioCoordinadorLoading extends InicioState {}
+
+class InicioCoordinadorSuccess extends InicioState {}
+
+class InicioCoordinadorFailure extends InicioState {
+  final String error;
+
+  InicioCoordinadorFailure(this.error);
+
+  @override
+  List<Object?> get props => [error];
 }

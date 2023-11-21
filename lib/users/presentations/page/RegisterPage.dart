@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_application_1/users/presentations/blocs/postLogin/postLogin_bloc.dart';
-import '../blocs/postLogin/postLogin_event.dart';
-import '../blocs/postLogin/postLogin_state.dart';
+
 import 'package:flutter/material.dart';
 
 class RegisterPage extends StatelessWidget {

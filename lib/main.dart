@@ -18,8 +18,12 @@ import 'package:flutter_application_1/publication/presentations/pages/getaudio_p
 import 'package:flutter_application_1/publication/presentations/pages/getgif_page.dart';
 import 'package:flutter_application_1/publication/presentations/pages/getprueba.dart';
 import 'package:flutter_application_1/reactioncase_config.dart';
+import 'package:flutter_application_1/transaction/presentations/blocs/poshTransaction/poshTransactionBloc.dart';
+import 'package:flutter_application_1/transaction/presentations/page/poshTransaction_page.dart';
+import 'package:flutter_application_1/transaction/presentations/page/poshaddBalance_page.dart';
 import 'package:flutter_application_1/users/presentations/page/postLogin_page.dart';
 import 'package:flutter_application_1/userscase_config.dart';
+import 'addBalancecase_config.dart';
 import 'movil/interfaz.dart';
 import 'reaction/presentations/blocs/getReaction/getReaction_bloc.dart';
 import 'reaction/presentations/blocs/poshReaction/poshReaction_bloc.dart';
@@ -34,6 +38,7 @@ import 'users/presentations/page/postUser_page.dart';
 UsercaseConfig usercaseConfig = UsercaseConfig();
 PostcaseConfig postcaseConfig = PostcaseConfig();
 ReactioncaseConfig reactioncaseConfig = ReactioncaseConfig();
+TransactioncaseConfig transactioncaseConfig = TransactioncaseConfig();
 
 void main() {
 
@@ -103,8 +108,13 @@ void main() {
           ),
         ),
 
+//finansas
 
-
+        BlocProvider<CreatetransactionBloc>(
+          create: (context) => CreatetransactionBloc(
+              createtransactionUseCase: transactioncaseConfig.createtransactionUseCase
+          ),
+        ),
       ],
       child: MyApp(),
     ),
@@ -117,7 +127,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: GetVideoPage(),
+      home: poshaddBalancePage(),
     );
   }
 }

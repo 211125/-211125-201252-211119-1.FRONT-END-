@@ -1,8 +1,18 @@
-abstract class PostLoginEvent {}
+part of 'postLogin_bloc.dart';
 
-class PostLoginStarted extends PostLoginEvent {
+@immutable
+abstract class InicioEvent {
+  @override
+  List<Object?> get props => [];
+}
+
+class IniciarSesionPressed extends InicioEvent {
   final String email;
   final String password;
 
-  PostLoginStarted({required this.email, required this.password});
+  IniciarSesionPressed( {required this.email, required this.password});
+
+
+  @override
+  List<Object?> get props => [email, password];
 }

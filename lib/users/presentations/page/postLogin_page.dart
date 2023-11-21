@@ -1,132 +1,151 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/users/presentations/page/postUser_page.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../publication/presentations/pages/getPost_page.dart';
+
+import '../../../movil/home_page.dart';
 import '../blocs/postLogin/postLogin_bloc.dart';
-import '../blocs/postLogin/postLogin_event.dart';
-import '../blocs/postLogin/postLogin_state.dart';
-import '../blocs/postUser/postUser_bloc.dart';
-import '../blocs/postUser/postUser_state.dart';
-import 'RegisterPage.dart';
-import 'home_page.dart';
+
+import 'package:fluttertoast/fluttertoast.dart';
 
 class LoginPage extends StatelessWidget {
+
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Login '),
-        backgroundColor: Colors.blue, // Setting app bar background color
+        backgroundColor: Color(0xFF5C2684),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
       ),
-      body: BlocListener<PostLoginBloc, PostLoginState>(
-        listener: (context, state) {
-          if (state is PostLoginSuccess) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => foto()),
-            );
-          }
-        },
-        child: BlocBuilder<PostLoginBloc, PostLoginState>(
-          builder: (context, state) {
-            if (state is PostLoginLoading) {
-              return Center(
-                child: CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation<Color>(Colors.blue), // Setting color of the loading indicator
-                ),
-              );
-            } else if (state is PostLoginFailure) {
-              return Center(
-                child: Text(
-                  'Login Failed: ${state.message}',
-                  style: TextStyle(
-                    color: Colors.red,
-                    fontSize: 16.0,
+      body: Column(
+        children: [
+          Expanded(
+            flex: 1,
+            child: Container(
+              color: Color(0xFF5C2684),
+              padding: EdgeInsets.only(top: 95.0), // Ajusta este valor para cambiar la posición vertical
+              child: Center(
+                child: CustomLoginWidget(),
+              ),
+            ),
+          ),
+          Expanded(
+            flex: 3,
+            child: Padding(
+              padding: EdgeInsets.all(20.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center, // Alinea los elementos al centro vertical
+                children: <Widget>[
+                  SizedBox(height: 20.0),
+                  TextField(
+                    controller: _emailController, // Asignar el controlador al campo de texto
+                    decoration: InputDecoration(
+                      hintText: 'Enter your email',
+                      labelText: 'Email',
+                    ),
                   ),
-                ),
-              );
-            } else {
-              return Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    TextFormField(
-                      controller: _emailController,
-                      decoration: InputDecoration(
-                        labelText: 'Email',
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8.0), // Setting border radius of the text field
-                        ),
-                      ),
+                  SizedBox(height: 20.0),
+                  TextField(
+                    controller: _passwordController, // Asignar el controlador al campo de texto
+                    decoration: InputDecoration(
+                      hintText: 'Enter your password',
+                      labelText: 'Password',
                     ),
-                    SizedBox(height: 20.0),
-                    TextFormField(
-                      controller: _passwordController,
-                      obscureText: true,
-                      decoration: InputDecoration(
-                        labelText: 'Password',
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8.0), // Setting border radius of the text field
-                        ),
-                      ),
+                    obscureText: true,
+                  ),
+                  SizedBox(height: 20.0),
+                  ElevatedButton(
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all<Color>(Color(0xFF5C2684)),
+                      minimumSize: MaterialStateProperty.all<Size>(Size(double.infinity, 50)), // Ajusta el ancho y alto del botón
                     ),
-                    SizedBox(height: 20.0),
-                    ElevatedButton(
-                      onPressed: () {
-                        BlocProvider.of<PostLoginBloc>(context).add(
-                          PostLoginStarted(
-                            email: _emailController.text,
-                            password: _passwordController.text,
-                          ),
-                        );
-                      },
-                      child: Text(
-                        'Login',
-                        style: TextStyle(fontSize: 16.0),
-                      ),
-                      style: ElevatedButton.styleFrom(
-                        primary: Colors.blue, // Setting button background color
-                        onPrimary: Colors.white, // Setting text color of the button
-                        padding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 50.0),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8.0), // Setting border radius of the button
-                        ),
-                      ),
-                    ),
-                    ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(
+                    onPressed: () async {
+
+                      String email = _emailController.text;
+                      String password = _passwordController.text;
+                      bool login = await context.read<PostLoginBloc>().login(email, password);
+                      if(login) {
+                        Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => CreateUserPage(bloc: BlocProvider.of<CreateUserBloc>(context)),
+                            builder: (context) =>
+                                Home_page(),
                           ),
                         );
-                      },
-                      child: Text(
-                        'register',
-                        style: TextStyle(fontSize: 16.0),
-                      ),
-                      style: ElevatedButton.styleFrom(
-                        primary: Colors.blue, // Setting button background color
-                        onPrimary: Colors.white, // Setting text color of the button
-                        padding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 50.0),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8.0), // Setting border radius of the button
-                        ),
-                      ),
+                      }
+                    },
+                    child: Text(
+                      'Log In',
+                      style: TextStyle(color: Colors.white),
                     ),
-                  ],
-                ),
-              );
-            }
-          },
+                  ),
+                  SizedBox(height: 10.0), // Añadido para el espacio entre el botón y el texto
+                  Text(
+                    'Create an account?',
+                    style: TextStyle(
+                      color: Color(0xFF5C2684),
+                    ),
+                  ),
+                /*  BlocBuilder<PostLoginBloc, InicioState>(
+                      builder: (context, state) {
+                        if(state is InicioCoordinadorLoading){
+                          return const Text("Cargando ...");
+                        } else if( state is InicioCoordinadorFailure){
+                          print('Errores:');
+                          print(state.error);
+                          print('Errores e :');
+                          Fluttertoast.showToast(
+                            msg: state.error,
+                            toastLength: Toast.LENGTH_SHORT,
+                            gravity: ToastGravity.CENTER,
+                            timeInSecForIosWeb: 1,
+                            backgroundColor: Colors.red,
+                            textColor: Colors.white,
+                            fontSize: 16.0,
+                          );
+                          return Text(state.error);
+                        }else {
+                          return Container();
+                        }
+                      }
+                  ),*/
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class CustomLoginWidget extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 50,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(15.0),
+          topRight: Radius.circular(15.0),
+        ),
+      ),
+      child: Center(
+        child: Text(
+          'Login',
+          style: TextStyle(
+            color: Color(0xFF5C2684),
+            fontSize: 16.0, // Ajusta el tamaño de fuente aquí
+          ),
         ),
       ),
     );
   }
 }
+

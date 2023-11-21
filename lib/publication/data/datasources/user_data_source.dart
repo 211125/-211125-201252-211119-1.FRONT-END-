@@ -21,7 +21,7 @@ abstract class poshLocalDataSource {
 }
 
 class PoshLocalDataSourceImp implements poshLocalDataSource {
-  final String _baseUrl = 'https://plv3w7fl-3000.usw3.devtunnels.ms';
+  final String _baseUrl = 'http://192.168.1.73:3000';
 
 @override
 Future<List<PostModel>> getUsers() async {

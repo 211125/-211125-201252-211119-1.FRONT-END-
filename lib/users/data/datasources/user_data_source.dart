@@ -1,17 +1,20 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
+import '../../domain/entities/session.dart';
 import '../../domain/entities/userLogin.dart';
 import '../../domain/entities/usercreate.dart';
 import '../models/post_login.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 
 import '../models/post_user.dart';
+import '../models/session_moodel.dart';
 
 
 abstract class UserLocalDataSource {
   Future<void> createUser(UserModel user);
-  Future<UserLogin?> postLogin(String email, String password);
+  Future<Session> postLogin(Login login);
 
 }
 
@@ -48,33 +51,30 @@ class UserLocalDataSourceImp implements UserLocalDataSource {
 
   }
   @override
-  Future<UserLogin?> postLogin(String email, String password) async {
-    try {
-      final response = await http.post(
-        Uri.parse('$_baseUrl/login/login'),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
-        body: jsonEncode(<String, String>{
-          'email': email,
-          'password': password,
-        }),
-      );
+  Future<Session> postLogin(Login login) async {
+    final response = await http.post(
+      Uri.parse('$_baseUrl/login/login'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(LoginModel.fromEntity(login).toJson()),
+    );
 
+    if (response.body != null && response.body.isNotEmpty) {
+      dynamic body = jsonDecode(response.body);
       if (response.statusCode == 200) {
-        print('Response body: ${response.body}');
-        UserLoginModel user = UserLoginModel.fromJson(jsonDecode(response.body));
-        print('Decoded user: $user');
-        return user;
+        SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+        sharedPreferences.setString('session', jsonEncode(body['data']));
+        return SessionModel.fromJson(body['data']);
       } else {
-        print('Response body error: ${response.body}');
-        throw Exception('Failed to load user: ${response.statusCode}');
+        print("error");
+        throw Exception(body['error']);
       }
-    } catch (e) {
-      print('Exception: $e');
-      throw Exception('Failed to load user: $e');
+    } else {
+      throw Exception("Empty response from server");
     }
   }
+
 
 
 

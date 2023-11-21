@@ -1,25 +1,34 @@
 
 import '../../domain/entities/userLogin.dart';
-class UserLoginModel extends UserLogin {
-  UserLoginModel({
-    required String status,
-    required String token,
-    required int userId,
-  }) : super(status: status, token: token, userId: userId);
 
-  factory UserLoginModel.fromJson(Map<String, dynamic> json) {
-    return UserLoginModel(
-      status: json['status'] ?? '',
-      token: json['token'] ?? '',
-      userId: json['userId'] ?? 0,
+class LoginModel extends Login {
+  LoginModel({
+    required String email,
+    required String password,
+  }): super (email: email, password: password);
+
+
+  factory LoginModel.fromJson(Map<String, dynamic> json) {
+    if (json == null) {
+      throw Exception("JSON is null");
+    }
+    return LoginModel(
+      email: json['email']?? '',
+      password: json['password']?? '',
     );
   }
 
-  factory UserLoginModel.fromEntity(UserLogin login) {
-    return UserLoginModel(
-      status: login.status,
-      token: login.token,
-      userId: login.userId,
+  factory LoginModel.fromEntity(Login login){
+    return LoginModel(
+        email: login.email,
+        password: login.password
     );
+  }
+
+  Map<String, dynamic> toJson(){
+    return {
+      'email': email,
+      'password': password,
+    };
   }
 }

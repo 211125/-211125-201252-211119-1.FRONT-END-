@@ -1,13 +1,10 @@
-class UserLogin {
-  final String status;
-  final String token;
-  final int userId;
+class Login {
+  final String email;
+  final String password;
 
-  UserLogin({
-    required this.status,
-    required this.token,
-    required this.userId,
+  Login({
+    required this.email,
+    required this.password,
   });
-
 }
 
