@@ -6,6 +6,7 @@ import '../../domain/entities/getAccount.dart';
 import '../../domain/entities/getTransactions.dart';
 import '../models/addBalanceModel.dart';
 import '../models/createtransaction.dart';
+import '../models/getBalance.dart';
 
 
 
@@ -51,10 +52,11 @@ class TransactionLocalDataSourceImp implements ReactionLocalDataSource {
 
 
   @override
-  Future<List<getTransactions>> getAllTransactions(int accountId) {
-    // TODO: implement getAllTransactions
+  Future<List<getTransactions>> getAllTransactions(int accountId)async {
     throw UnimplementedError();
+
   }
+
 
   @override
   Future<List<getTransactions>> getTransaction(int id, int accountId) {
@@ -63,10 +65,31 @@ class TransactionLocalDataSourceImp implements ReactionLocalDataSource {
   }
 
   @override
-  Future<List<getAccount>> getaccount(int id, int userId) {
-    // TODO: implement getaccount
-    throw UnimplementedError();
+  Future<List<GetBalanceModel>> getaccount(int id, int userId) async {
+    try {
+      var response = await http.get(Uri.parse('$_baseUrl/account/get/balance/${id}/${userId}'));
+      if (response.statusCode == 200) {
+        var jsonResponse = jsonDecode(response.body);
+
+        // Verificar si la respuesta es exitosa y contiene la clave 'data'
+        if (jsonResponse['status'] == 'success' && jsonResponse.containsKey('data')) {
+          // Crear un GetBalanceModel a partir del objeto 'data'
+          GetBalanceModel balance = GetBalanceModel.fromJson(jsonResponse['data']);
+          return [balance]; // Devolver como una lista
+        } else {
+          throw Exception('Failed to load balance');
+        }
+      } else {
+        throw Exception('Failed to load balance');
+      }
+    } catch (e) {
+      print('Error al obtener el balance: $e');
+      throw e;
+    }
   }
+
+
+
 
   @override
   Future<void> updateAddBalance(AddBalanceModel add) async{

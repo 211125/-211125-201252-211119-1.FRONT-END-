@@ -3,7 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart'; // Importa el paquete intl
 import 'package:fluttertoast/fluttertoast.dart'; // Importa fluttertoast
 
+import '../blocs/getbalance/getBalanceBloc.dart';
 import '../blocs/poshTransaction/poshTransactionBloc.dart';
+import '../blocs/poshaddBalance/poshaddBalanceBloc.dart';
 
 class Payment {
   String description;
@@ -19,6 +21,15 @@ class poshaddBalancePage extends StatefulWidget {
 }
 
 class _PoshTransactionPageState extends State<poshaddBalancePage> {
+  int id = 1;
+  int userId = 1;
+  @override
+  void initState() {
+    super.initState();
+
+    context.read<GetBalanceBloc>().add(FetchBalanceEvent(id: id, userId: userId));
+  }
+
   TextEditingController _descriptionController = TextEditingController();
   TextEditingController _amountController = TextEditingController();
   String selectedCategory = "Comida";
@@ -41,7 +52,7 @@ class _PoshTransactionPageState extends State<poshaddBalancePage> {
   List<String> categories = ["Comida", "Transporte", "Renta", "Otros"];
 
   List<Payment> payments = [];
-  void _registerPayment() {
+  void _registerPayment()async {
     // Verifica si los campos están vacíos
     if (_descriptionController.text.isEmpty || _amountController.text.isEmpty) {
       Fluttertoast.showToast(
@@ -71,8 +82,9 @@ class _PoshTransactionPageState extends State<poshaddBalancePage> {
       categoriId: categoriId,
       accountId: accountId,
     );
-
+    AddBalancePressed evet1 = AddBalancePressed(userId: 1, balance: amount);
     context.read<CreatetransactionBloc>().add(event);
+    context.read<AddBalanceBloc>().add(evet1);
 
     Fluttertoast.showToast(
         msg: "Registro exitoso",
@@ -110,22 +122,34 @@ class _PoshTransactionPageState extends State<poshaddBalancePage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Container(
-                padding: EdgeInsets.symmetric(vertical: 20),
-                color: Colors.white70,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Available balance',
-                      style: TextStyle(color: Colors.purple, fontSize: 20),
+
+              BlocBuilder<GetBalanceBloc, GetBalanceState>(
+                builder: (context, state) {
+                  String balance = "Cargando..."; // Valor por defecto
+                  if (state is GetBalanceLoadedState) {
+                    balance = '\$ ' + state.balances.first.balance.toString();
+                  } else if (state is GetBalanceErrorState) {
+                    balance = "Error: " + state.error;
+                    print("Error: " + state.error);
+                  }
+                  return Container(
+                    padding: EdgeInsets.symmetric(vertical: 20),
+                    color: Colors.white70,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'dinero',
+                          style: TextStyle(color: Colors.purple, fontSize: 20),
+                        ),
+                        Text(
+                          balance, // Mostrar el balance actualizado
+                          style: TextStyle(color: Colors.green, fontSize: 18),
+                        ),
+                      ],
                     ),
-                    Text(
-                      '\$ 2,000',
-                      style: TextStyle(color: Colors.green, fontSize: 18),
-                    ),
-                  ],
-                ),
+                  );
+                },
               ),
               SizedBox(height: 10),
               TextField(

@@ -11,6 +11,7 @@ import 'package:flutter_application_1/transaction/domain/entities/getTransaction
 import '../../domain/repositories/transaction_repository.dart';
 import '../datasources/transaction_data_source.dart';
 import '../models/createtransaction.dart';
+import '../models/getBalance.dart';
 
 class TransactionRepositoryImpl implements TransactionRepository {
   final TransactionLocalDataSourceImp transactionLocalDataSource;
@@ -34,7 +35,7 @@ class TransactionRepositoryImpl implements TransactionRepository {
   }
 
   @override
-  Future<List<getAccount>> getaccount(int id, int userId) async {
+  Future<List<GetBalanceModel>> getaccount(int id, int userId) async {
     return await transactionLocalDataSource.getaccount(id, userId);
   }
 

@@ -1,3 +1,4 @@
+import '../../data/models/getBalance.dart';
 import '../entities/getAccount.dart';
 import '../repositories/transaction_repository.dart';
 
@@ -6,7 +7,7 @@ class GetaccountUseCase {
 
   GetaccountUseCase(this.transactionRepository);
 
-  Future<List<getAccount>> execute(int id,int userId) async {
+  Future<List<GetBalanceModel>> execute(int id,int userId) async {
     return await transactionRepository.getaccount(id, userId);
   }
 

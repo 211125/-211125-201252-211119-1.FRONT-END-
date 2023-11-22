@@ -1,19 +1,20 @@
 
 
 import '../../domain/entities/addBalance.dart';
+import '../../domain/entities/getAccount.dart';
 
 class AddBalanceModel extends addBalance {
 
   AddBalanceModel({
-    required int userId,
 
+    int? userId,
     required int balance,
   }) : super(userId:userId,balance: balance);
 
 
   factory AddBalanceModel.fromJson(Map<String, dynamic> json) {
     return AddBalanceModel(
-      userId : json['userId'] ?? 0,
+      userId : json['userId'] ,
       balance: json['balance'] ?? 0,
 
     );

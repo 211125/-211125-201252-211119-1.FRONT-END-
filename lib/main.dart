@@ -18,7 +18,9 @@ import 'package:flutter_application_1/publication/presentations/pages/getaudio_p
 import 'package:flutter_application_1/publication/presentations/pages/getgif_page.dart';
 import 'package:flutter_application_1/publication/presentations/pages/getprueba.dart';
 import 'package:flutter_application_1/reactioncase_config.dart';
+import 'package:flutter_application_1/transaction/presentations/blocs/getbalance/getBalanceBloc.dart';
 import 'package:flutter_application_1/transaction/presentations/blocs/poshTransaction/poshTransactionBloc.dart';
+import 'package:flutter_application_1/transaction/presentations/blocs/poshaddBalance/poshaddBalanceBloc.dart';
 import 'package:flutter_application_1/transaction/presentations/page/poshTransaction_page.dart';
 import 'package:flutter_application_1/transaction/presentations/page/poshaddBalance_page.dart';
 import 'package:flutter_application_1/users/presentations/page/postLogin_page.dart';
@@ -113,6 +115,16 @@ void main() {
         BlocProvider<CreatetransactionBloc>(
           create: (context) => CreatetransactionBloc(
               createtransactionUseCase: transactioncaseConfig.createtransactionUseCase
+          ),
+        ),
+        BlocProvider<AddBalanceBloc>(
+          create: (context) => AddBalanceBloc(
+              poshaddBalanceUseCase: transactioncaseConfig.poshaddBalanceUseCase
+          ),
+        ),
+        BlocProvider<GetBalanceBloc>(
+          create: (context) => GetBalanceBloc(
+              getaccountUseCase: transactioncaseConfig.getaccountUseCase
           ),
         ),
       ],
