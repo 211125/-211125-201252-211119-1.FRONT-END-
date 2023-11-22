@@ -86,6 +86,8 @@ class _PoshTransactionPageState extends State<poshaddBalancePage> {
     context.read<CreatetransactionBloc>().add(event);
     context.read<AddBalanceBloc>().add(evet1);
 
+    context.read<GetBalanceBloc>()
+        .add(FetchBalanceEvent(id: id, userId: userId));
     Fluttertoast.showToast(
         msg: "Registro exitoso",
         toastLength: Toast.LENGTH_SHORT,
@@ -97,7 +99,15 @@ class _PoshTransactionPageState extends State<poshaddBalancePage> {
   }
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return  BlocListener<AddBalanceBloc, createaddBalanceState>(
+        listener: (context, state) {
+      // Cuando se actualiza el balance exitosamente, recarga el balance
+      if (state is createaddBalanceSuccess) {
+        context
+            .read<GetBalanceBloc>()
+            .add(FetchBalanceEvent(id: id, userId: userId));
+      }
+    },child:Scaffold(
       appBar: AppBar(
         title: Text(
           'nuevo ingreso',
@@ -116,7 +126,8 @@ class _PoshTransactionPageState extends State<poshaddBalancePage> {
         ),
         elevation: 0.0, // Elimina el sombreado de la AppBar
       ),
-      body: SingleChildScrollView(
+      body:
+      SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
@@ -179,7 +190,7 @@ class _PoshTransactionPageState extends State<poshaddBalancePage> {
             ],
           ),
         ),
-      ),
+      ),  ),
     );
   }
 }
