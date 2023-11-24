@@ -1,4 +1,5 @@
 class createtransaction {
+  int ? id;
   final String date;
   final bool type;
   final int amount;
@@ -9,6 +10,7 @@ class createtransaction {
 
 
   createtransaction({
+    this.id,
     required this.date,
     required this.type,
     required this.amount,

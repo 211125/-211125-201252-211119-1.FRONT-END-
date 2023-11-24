@@ -8,7 +8,7 @@ class LoginModel extends Login {
   }): super (email: email, password: password);
 
 
-  factory LoginModel.fromJson(Map<String, dynamic> json) {
+  factory LoginModel.fromJson(Map<String, dynamic>? json) {
     if (json == null) {
       throw Exception("JSON is null");
     }

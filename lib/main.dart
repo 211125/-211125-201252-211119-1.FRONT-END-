@@ -18,9 +18,12 @@ import 'package:flutter_application_1/publication/presentations/pages/getaudio_p
 import 'package:flutter_application_1/publication/presentations/pages/getgif_page.dart';
 import 'package:flutter_application_1/publication/presentations/pages/getprueba.dart';
 import 'package:flutter_application_1/reactioncase_config.dart';
+import 'package:flutter_application_1/transaction/presentations/blocs/getAlltransaction/getAlltransactionBloc.dart';
 import 'package:flutter_application_1/transaction/presentations/blocs/getbalance/getBalanceBloc.dart';
 import 'package:flutter_application_1/transaction/presentations/blocs/poshTransaction/poshTransactionBloc.dart';
 import 'package:flutter_application_1/transaction/presentations/blocs/poshaddBalance/poshaddBalanceBloc.dart';
+import 'package:flutter_application_1/transaction/presentations/blocs/poshreduceBalance/poshreduceBalanceBloc.dart';
+import 'package:flutter_application_1/transaction/presentations/page/home_page.dart';
 import 'package:flutter_application_1/transaction/presentations/page/poshTransaction_page.dart';
 import 'package:flutter_application_1/transaction/presentations/page/poshaddBalance_page.dart';
 import 'package:flutter_application_1/users/presentations/page/postLogin_page.dart';
@@ -127,6 +130,18 @@ void main() {
               getaccountUseCase: transactioncaseConfig.getaccountUseCase
           ),
         ),
+        BlocProvider<GetAllTransactionsBloc>(
+          create: (context) => GetAllTransactionsBloc(
+              getAllTransactionsUseCase: transactioncaseConfig.getAllTransactionsUseCase
+          ),
+        ),
+        BlocProvider<ReduceBalanceBloc>(
+          create: (context) => ReduceBalanceBloc(
+              poshreduceBalanceUseCase: transactioncaseConfig.poshreduceBalanceUseCase
+          ),
+          //GetAllTransactionsBloc
+        ),
+
       ],
       child: MyApp(),
     ),
@@ -139,7 +154,8 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: poshaddBalancePage(),
+      home:// poshaddBalancePage(),
+      LoginPage()
     );
   }
 }

@@ -20,3 +20,18 @@ class InicioCoordinadorFailure extends InicioState {
   @override
   List<Object?> get props => [error];
 }
+
+abstract class UserState {
+  final int userId;
+
+  UserState(this.userId);
+}
+
+class UserInitial extends UserState {
+  UserInitial() : super(-1); // -1 indica que no hay usuario
+}
+
+class UserLoggedIn extends UserState {
+  UserLoggedIn(int userId) : super(userId);
+}
+

@@ -14,7 +14,7 @@ abstract class TransactionRepository{
   Future<void> createTransaction(createtransactionModel transaction);
 
   Future<List<GetBalanceModel>> getaccount(int id,int userId);
-  Future<List<getTransactions>> getAllTransactions(int accountId);
+  Future<List<createtransactionModel>> getAllTransactions(int accountId);
   Future<List<getTransactions>> getTransaction(int id,int accountId);
 
 }

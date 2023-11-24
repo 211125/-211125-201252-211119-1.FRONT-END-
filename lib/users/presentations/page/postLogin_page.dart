@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../movil/home_page.dart';
+import '../../../transaction/presentations/page/home_page.dart';
 import '../blocs/postLogin/postLogin_bloc.dart';
 
 import 'package:fluttertoast/fluttertoast.dart';
@@ -91,7 +91,7 @@ class LoginPage extends StatelessWidget {
                       color: Color(0xFF5C2684),
                     ),
                   ),
-                /*  BlocBuilder<PostLoginBloc, InicioState>(
+                 BlocBuilder<PostLoginBloc, InicioState>(
                       builder: (context, state) {
                         if(state is InicioCoordinadorLoading){
                           return const Text("Cargando ...");
@@ -113,7 +113,7 @@ class LoginPage extends StatelessWidget {
                           return Container();
                         }
                       }
-                  ),*/
+                  )
                 ],
               ),
             ),

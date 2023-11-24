@@ -2,11 +2,10 @@ import '../../domain/entities/session.dart';
 
 class SessionModel extends Session {
   SessionModel({
-    super.status,
-    super.token,
-    super.userId,
-
-  });
+     String? status,
+     String? token,
+     int? userId,
+  }): super(status: status, token: token, userId: userId);
 
   factory SessionModel.fromJson(Map<String, dynamic> json) {
     if (json == null || json['data'] == null) {

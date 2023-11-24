@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:file_picker/file_picker.dart'; // Importar el paquete file_picker
 
+import '../../../users/presentations/blocs/postLogin/postLogin_bloc.dart';
 import '../../data/models/posh_model.dart';
 import '../bloc/createpost/createpost_bloc.dart';
 import '../bloc/createpost/createpost_event.dart';
@@ -28,6 +29,8 @@ class _CreatePostPageState extends State<CreatePostPage> {
 
   @override
   Widget build(BuildContext context) {
+    final postLoginBloc = context.read<PostLoginBloc>();
+
     return Scaffold(
       appBar: AppBar(title: Text('Crear publicación')),
       body: BlocBuilder<CreatePostBloc, CreatePostState>(
@@ -51,7 +54,8 @@ class _CreatePostPageState extends State<CreatePostPage> {
                   onPressed: () async {
                     FilePickerResult? result = await FilePicker.platform.pickFiles(
                       type: FileType.custom,
-                      allowedExtensions: ['jpg', 'png', 'gif', 'mp4', 'mp3'], // Permitir extensiones de imagen, video y audio
+                      allowedExtensions: ['jpg', 'png', 'gif', 'mp4', 'mp3','pdf'],
+
                     );
                     if (result != null) {
                       PlatformFile file = result.files.first;
@@ -74,9 +78,13 @@ class _CreatePostPageState extends State<CreatePostPage> {
                   child: Text('Crear publicación'),
                   onPressed: () {
                     if (_imagePath != null) {
-                     context.read<CreatePostBloc>().add(CreateUserEvent(
+                      int userId = postLoginBloc.userId ?? 0; // Obtener el userId
+                      print("mi user id${userId}");
+
+                      print(userId);
+                      context.read<CreatePostBloc>().add(CreateUserEvent(
                         user: createModel(
-                          userId: 1,
+                          userId: userId,
                           description: _descriptionController.text,
                           filePath: _imagePath!,
                         ),

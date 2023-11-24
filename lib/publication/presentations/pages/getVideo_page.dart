@@ -1,16 +1,19 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_application_1/publication/data/models/getuser_model.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 
-import '../../../movil/addpuc.dart';
-import '../../../movil/home_page.dart';
+import '../page/addpuc.dart';
+import '../../../transaction/presentations/page/home_page.dart';
 import '../bloc/createpost/createpost_bloc.dart';
 import '../bloc/getvideo/getvideo_bloc.dart';
 import '../bloc/getvideo/getvideo_event.dart';
 import '../bloc/getvideo/getvideo_state.dart';
-import '../page/audioget.dart';
 import 'getPdf_page.dart';
 import 'getPost_page.dart';
+import 'getaudio_page.dart';
 import 'gifsocialcar.dart';
 import 'widgets/PDFViewerScreen.dart'; // Asegúrate de que esta es la ruta correcta
 
@@ -20,10 +23,30 @@ class GetVideoPage extends StatefulWidget {
 }
 
 class _getpdf extends State<GetVideoPage> {
+  late StreamSubscription<ConnectivityResult> subscription;
+
   @override
   void initState() {
     super.initState();
     BlocProvider.of<GetvideoBloc>(context).add(FetchvideoEvent());
+
+    subscription = Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
+      print(result);
+      print('hh');
+
+      if(result == ConnectivityResult.wifi || result == ConnectivityResult.mobile) {
+      //  context.read<ViewVoluntarysBloc>().add(GetVoluntarys(coneccion: true));
+        //ScaffoldMessenger.of(context).clearSnackBars();
+      } else {
+        const snackBar = SnackBar(
+          content: Text('Se perdió la conectividad Wi-Fi', style: TextStyle(),),
+          duration: Duration(days: 365),
+        );
+        //ScaffoldMessenger.of(context).showSnackBar(snackBar);
+       // context.read<ViewVoluntarysBloc>().add(GetVoluntarys(coneccion: false));
+      }
+
+    });
   }
   int _currentIndex = 1; // Índice del ítem del foro
   void _showadd(BuildContext context) {

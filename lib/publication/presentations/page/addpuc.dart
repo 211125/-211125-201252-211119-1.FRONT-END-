@@ -5,10 +5,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:file_picker/file_picker.dart';
 
-import '../publication/data/models/posh_model.dart';
-import '../publication/presentations/bloc/createpost/createpost_bloc.dart';
-import '../publication/presentations/bloc/createpost/createpost_event.dart';
-import '../publication/presentations/bloc/createpost/createpost_state.dart';
+import '../../data/models/posh_model.dart';
+import '../bloc/createpost/createpost_bloc.dart';
+import '../bloc/createpost/createpost_event.dart';
+import '../bloc/createpost/createpost_state.dart';
 
 class Post_Page extends StatefulWidget {
   CreatePostBloc bloc;
@@ -84,7 +84,7 @@ class _CreatePostPageState extends State<Post_Page> {
                                 onPressed: () async {
                                   FilePickerResult? result = await FilePicker.platform.pickFiles(
                                     type: FileType.custom,
-                                    allowedExtensions: ['jpg', 'png', 'gif', 'mp4', 'mp3'], // Permitir extensiones de imagen, video y audio
+                                    allowedExtensions: ['jpg', 'png', 'gif', 'mp4', 'mp3', 'pdf'], // Permitir extensiones de imagen, video y audio
                                   );
                                   if (result != null) {
                                     PlatformFile file = result.files.first;

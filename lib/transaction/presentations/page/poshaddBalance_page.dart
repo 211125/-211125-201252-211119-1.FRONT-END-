@@ -3,9 +3,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart'; // Importa el paquete intl
 import 'package:fluttertoast/fluttertoast.dart'; // Importa fluttertoast
 
+import '../../../users/presentations/blocs/postLogin/postLogin_bloc.dart';
 import '../blocs/getbalance/getBalanceBloc.dart';
 import '../blocs/poshTransaction/poshTransactionBloc.dart';
 import '../blocs/poshaddBalance/poshaddBalanceBloc.dart';
+import 'home_page.dart';
 
 class Payment {
   String description;
@@ -22,12 +24,14 @@ class poshaddBalancePage extends StatefulWidget {
 
 class _PoshTransactionPageState extends State<poshaddBalancePage> {
   int id = 1;
-  int userId = 1;
+  late int userId;
   @override
   void initState() {
     super.initState();
 
-    context.read<GetBalanceBloc>().add(FetchBalanceEvent(id: id, userId: userId));
+    final postLoginBloc = context.read<PostLoginBloc>();
+    userId = postLoginBloc.userId ?? 0;
+    context.read<GetBalanceBloc>().add(FetchBalanceEvent(id: userId, userId: userId));
   }
 
   TextEditingController _descriptionController = TextEditingController();
@@ -71,7 +75,7 @@ class _PoshTransactionPageState extends State<poshaddBalancePage> {
     bool type = true;
     int amount = int.tryParse(_amountController.text) ?? 0;
     String description = _descriptionController.text;
-    int categoriId = 4;
+    int categoriId = 5;
     int accountId = 1;
 
     CreatetransactionPressed event = CreatetransactionPressed(
@@ -121,8 +125,9 @@ class _PoshTransactionPageState extends State<poshaddBalancePage> {
             color: Color.fromARGB(255, 0, 0, 0),
           ),
           onPressed: () {
-            // Acción para el botón de atrás
-          },
+            Navigator.of(context).push(
+              MaterialPageRoute(builder: (context) => Home_page()),
+            );          },
         ),
         elevation: 0.0, // Elimina el sombreado de la AppBar
       ),

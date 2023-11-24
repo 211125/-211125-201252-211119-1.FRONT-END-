@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:audioplayers/audioplayers.dart';
-import '../../../movil/addpuc.dart';
-import '../../../movil/home_page.dart';
+import '../page/addpuc.dart';
+import '../../../transaction/presentations/page/home_page.dart';
 import '../../../reaction/data/models/post_login.dart';
 import '../../../reaction/presentations/blocs/poshReaction/poshReaction_bloc.dart';
 import '../../../reaction/presentations/blocs/poshReaction/poshReaction_event.dart';

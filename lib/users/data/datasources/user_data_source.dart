@@ -5,7 +5,7 @@ import '../../domain/entities/session.dart';
 import '../../domain/entities/userLogin.dart';
 import '../../domain/entities/usercreate.dart';
 import '../models/post_login.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+//import 'package:shared_preferences/shared_preferences.dart';
 
 
 import '../models/post_user.dart';
@@ -19,7 +19,7 @@ abstract class UserLocalDataSource {
 }
 
 class UserLocalDataSourceImp implements UserLocalDataSource {
-  final String _baseUrl = 'http://192.168.1.73:3000';
+  final String _baseUrl = 'https://211125-201252-211119-backend-production.up.railway.app';
   //  Future<void> createUser(UserModel user) async {
   @override
   Future<void> createUser(UserModel user) async {
@@ -50,32 +50,47 @@ class UserLocalDataSourceImp implements UserLocalDataSource {
     }
 
   }
+
   @override
   Future<Session> postLogin(Login login) async {
+    final Uri url = Uri.parse('$_baseUrl/login/login');
     final response = await http.post(
-      Uri.parse('$_baseUrl/login/login'),
+      url,
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
-      body: jsonEncode(LoginModel.fromEntity(login).toJson()),
+      body: jsonEncode({
+        'email': login.email,
+        'password': login.password,
+      }),
     );
 
-    if (response.body != null && response.body.isNotEmpty) {
-      dynamic body = jsonDecode(response.body);
-      if (response.statusCode == 200) {
-        SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-        sharedPreferences.setString('session', jsonEncode(body['data']));
-        return SessionModel.fromJson(body['data']);
-      } else {
-        print("error");
-        throw Exception(body['error']);
-      }
-    } else {
-      throw Exception("Empty response from server");
+    if (response.statusCode != 200) {
+          print('Failed to create user${response.statusCode}');
+
+          throw Exception('correo o contraseña incorrectos');
     }
+
+    final body = jsonDecode(response.body);
+    if (body == null) {
+      throw Exception('Invalid or missing data in response');
+    }
+
+    // No es necesario buscar la clave 'data', directamente podemos acceder a los campos
+    String status = body['status'];
+    String token = body['token'];
+    int userId = body['userId'];
+
+    if (status == null || token == null || userId == null) {
+      throw Exception('Missing required fields in response');
+    }
+
+
+    return SessionModel(status: status, token: token, userId: userId);
   }
 
-
-
-
 }
+
+
+
+

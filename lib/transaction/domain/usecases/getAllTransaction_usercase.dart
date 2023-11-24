@@ -1,3 +1,4 @@
+import '../../data/models/createtransaction.dart';
 import '../entities/getAccount.dart';
 import '../entities/getTransactions.dart';
 import '../repositories/transaction_repository.dart';
@@ -7,7 +8,7 @@ class GetAllTransactionsUseCase {
 
   GetAllTransactionsUseCase(this.transactionRepository);
 
-  Future<List<getTransactions>> execute(int accountId) async {
+  Future<List<createtransactionModel>> execute(int accountId) async {
     return await transactionRepository.getAllTransactions(accountId);
   }
 

@@ -24,7 +24,7 @@ class TransactionRepositoryImpl implements TransactionRepository {
   }
 
   @override
-  Future<List<getTransactions>> getAllTransactions(int accountId) async {
+  Future<List<createtransactionModel>> getAllTransactions(int accountId) async {
     return await transactionLocalDataSource.getAllTransactions(accountId);
 
   }

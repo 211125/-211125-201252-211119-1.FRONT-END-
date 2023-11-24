@@ -1,22 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_application_1/publication/data/models/getuser_model.dart';
-import '../../domain/usecases/getpost_usercase.dart.dart';
 
-
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-
-import '../bloc/getgif/getgif_bloc.dart';
-import '../bloc/getgif/getgif_event.dart';
-import '../bloc/getgif/getgif_state.dart';
-import 'fondo.dart';
-import 'getPost_page.dart';
-import 'getVideo_page.dart';
-import 'getaudio_page.dart';import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_application_1/publication/data/models/getuser_model.dart';
-import '../../domain/usecases/getpost_usercase.dart.dart';
 
 import '../bloc/getgif/getgif_bloc.dart';
 import '../bloc/getgif/getgif_event.dart';
@@ -25,6 +10,8 @@ import 'fondo.dart';
 import 'getPost_page.dart';
 import 'getVideo_page.dart';
 import 'getaudio_page.dart';
+
+
 
 class GetGifPage extends StatefulWidget {
   @override

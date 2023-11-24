@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_application_1/publication/data/models/getuser_model.dart';
-import '../../../movil/addpuc.dart';
-import '../../../movil/home_page.dart';
+import '../page/addpuc.dart';
+import '../../../transaction/presentations/page/home_page.dart';
 import '../../../users/presentations/blocs/postUser/postUser_bloc.dart';
 import '../../../users/presentations/page/postUser_page.dart';
 import '../../domain/usecases/getpost_usercase.dart.dart';

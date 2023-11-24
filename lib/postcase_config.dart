@@ -8,6 +8,7 @@ import 'package:flutter_application_1/publication/domain/usecases/getgif_usecase
 
 import 'package:flutter_application_1/publication/domain/usecases/getpost_usercase.dart.dart';
 import 'package:flutter_application_1/publication/domain/usecases/poshpost_usercase.dart';
+import 'package:flutter_application_1/transaction/domain/usecases/getAllTransaction_usercase.dart';
 
 class PostcaseConfig {
   PoshLocalDataSourceImp? poshLocalDataSourceImp;
@@ -18,7 +19,6 @@ class PostcaseConfig {
   GetaudioUseCase? getaudioUseCase;
   GetgitUseCase? getgitUseCase;
   GetpdfUseCase? getpdfUseCase;
-
   PostcaseConfig() {
     poshLocalDataSourceImp = PoshLocalDataSourceImp();
     poshRepositoryImpl = PoshRepositoryImpl(poshLocalDataSource: poshLocalDataSourceImp!);

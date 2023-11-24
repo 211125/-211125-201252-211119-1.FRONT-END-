@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_application_1/publication/data/models/getuser_model.dart';
 
-import '../../../movil/addpuc.dart';
-import '../../../movil/home_page.dart';
+import '../page/addpuc.dart';
+import '../../../transaction/presentations/page/home_page.dart';
 import '../bloc/createpost/createpost_bloc.dart';
-import '../page/audioget.dart';
 import 'getPost_page.dart';
 import 'getVideo_page.dart';
-import 'widgets/PDFViewerScreen.dart'; // Asegúrate de que esta es la ruta correcta
+import 'getaudio_page.dart';
+import 'widgets/PDFViewerScreen.dart';
+
 import '../bloc/getpdf/getpdf_bloc.dart';
 import '../bloc/getpdf/getpdf_event.dart';
 import '../bloc/getpdf/getpdf_state.dart';

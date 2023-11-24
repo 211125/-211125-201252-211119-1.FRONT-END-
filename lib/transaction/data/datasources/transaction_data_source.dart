@@ -14,14 +14,14 @@ abstract class ReactionLocalDataSource {
   Future<void> updateAddBalance(AddBalanceModel add);
   Future<void> updateReduceBalance(AddBalanceModel add);
   Future<List<getAccount>> getaccount(int id,int userId);
-  Future<List<getTransactions>> getAllTransactions(int accountId);
+  Future<List<createtransactionModel>> getAllTransactions(int accountId);
   Future<List<getTransactions>> getTransaction(int id,int accountId);
   Future<void> createTransaction(createtransactionModel transaction);
 
 }
 
 class TransactionLocalDataSourceImp implements ReactionLocalDataSource {
-  final String _baseUrl = 'http://192.168.1.73:3000';
+  final String _baseUrl = 'https://plv3w7fl-3001.usw3.devtunnels.ms';
 
   @override
   Future<void> createTransaction(createtransactionModel transaction) async {
@@ -29,7 +29,7 @@ class TransactionLocalDataSourceImp implements ReactionLocalDataSource {
       // Codifica los datos del modelo en formato JSON
       var transactionData = jsonEncode({
         'date': transaction.date,
-        'type': transaction.type.toString(), // Asegúrate de convertir el booleano a String si es necesario
+        'type': transaction.type.toString(),
         'amount': transaction.amount.toString(),
         'description': transaction.description,
         'categoriId': transaction.categoriId.toString(),
@@ -52,10 +52,31 @@ class TransactionLocalDataSourceImp implements ReactionLocalDataSource {
 
 
   @override
-  Future<List<getTransactions>> getAllTransactions(int accountId)async {
-    throw UnimplementedError();
+  Future<List<createtransactionModel>> getAllTransactions(int accountId) async {
+    try {
+      var response = await http.get(Uri.parse('$_baseUrl/transaction/list/all/$accountId'));
+      if (response.statusCode == 200) {
+        var jsonResponse = jsonDecode(response.body);
 
+        // Verificar si la respuesta es exitosa y contiene la clave 'data'
+        if (jsonResponse['status'] == 'success' && jsonResponse.containsKey('data')) {
+          // Convertir cada elemento en la lista 'data' a un objeto 'createtransactionModel'
+          List<createtransactionModel> transactions = (jsonResponse['data'] as List)
+              .map((item) => createtransactionModel.fromJson(item as Map<String, dynamic>))
+              .toList();
+          return transactions; // Devolver la lista de transacciones
+        } else {
+          throw Exception('Failed to load transactions');
+        }
+      } else {
+        throw Exception('Failed to load transactions');
+      }
+    } catch (e) {
+      print('Error al obtener las transacciones: $e');
+      throw e;
+    }
   }
+
 
 
   @override
@@ -110,9 +131,21 @@ class TransactionLocalDataSourceImp implements ReactionLocalDataSource {
   }
 
   @override
-  Future<void> updateReduceBalance(AddBalanceModel add) {
-    // TODO: implement updateReduceBalance
-    throw UnimplementedError();
+  Future<void> updateReduceBalance(AddBalanceModel add)async {
+    try {
+      await http.put(
+        Uri.parse('$_baseUrl/account/balance/reduce/${add.userId}'),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode(<String, int>{
+          'balance': add.balance,
+        }),
+      );
+    } catch (e) {
+      print('Error during network updateAddBalance: $e');
+      throw Exception('Network updateAddBalance');
+    }
   }
 
 }

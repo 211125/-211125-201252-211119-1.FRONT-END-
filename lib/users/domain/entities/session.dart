@@ -1,7 +1,7 @@
 class Session {
   String? status;
-  String? userId;
-  int? token;
+  String? token;
+  int? userId;
 
   Session({
     this.status,

@@ -1,14 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/transaction/presentations/page/poshTransaction_page.dart';
+import 'package:flutter_application_1/transaction/presentations/page/poshaddBalance_page.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../publication/presentations/pages/getVideo_page.dart';
+import '../../../publication/presentations/pages/getVideo_page.dart';
+import '../blocs/getbalance/getBalanceBloc.dart';
+import 'getAlltransaction_page.dart';
 
-  class Home_page extends StatefulWidget {
+class Home_page extends StatefulWidget {
   @override
   _Home createState() => _Home();
 }
 
-class _Home extends State<Home_page>  {
+class _Home extends State<Home_page> {
   int _currentIndex = 0;
+  int id = 1;
+  int userId = 1;
+  @override
+  void initState() {
+    super.initState();
+
+    context
+        .read<GetBalanceBloc>()
+        .add(FetchBalanceEvent(id: id, userId: userId));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,46 +46,67 @@ class _Home extends State<Home_page>  {
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: Container(
-                      width: 60,
-                      height: 60,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        shape: BoxShape.rectangle,
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Image.asset(
-                            'assets/images/deposito.png',
-                            width: 40,
-                            height: 40,
-                          ),
-                          Text(
-                            'Depósito',
-                            style: TextStyle(color: Colors.yellow, fontSize: 12),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-
+                  children: [
                     Padding(
                       padding: const EdgeInsets.all(20.0),
-                      child: Text(
-                        '\$ 2554.92',
-                        style: TextStyle(color: Colors.white, fontSize: 20),
+                      child: Container(
+                        width: 60,
+                        height: 60,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          shape: BoxShape.rectangle,
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                        child: InkWell(
+                          onTap: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                  builder: (context) => poshaddBalancePage()),
+                            );
+                          },
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Image.asset(
+                                'assets/images/deposito.png',
+                                width: 40,
+                                height: 40,
+                              ),
+                              Text(
+                                'Depósito',
+                                style: TextStyle(
+                                    color: Colors.yellow, fontSize: 12),
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
+                    ),
+                    BlocBuilder<GetBalanceBloc, GetBalanceState>(
+                      builder: (context, state) {
+                        String balance = "Cargando..."; // Valor por defecto
+                        if (state is GetBalanceLoadedState) {
+                          balance =
+                              '\$ ' + state.balances.first.balance.toString();
+                        } else if (state is GetBalanceErrorState) {
+                          balance = "Error: " + state.error;
+                          print("Error: " + state.error);
+                        }
+                        return Padding(
+                          padding: const EdgeInsets.all(20.0),
+                          child: Text(
+                            balance,
+                            style: TextStyle(color: Colors.white, fontSize: 20),
+                          ),
+                        );
+                      },
                     ),
                   ],
                 ),
               ),
               SizedBox(height: 20),
               Padding(
-                padding: const EdgeInsets.only( left: 50), 
+                padding: const EdgeInsets.only(left: 50),
                 child: Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
@@ -88,6 +124,13 @@ class _Home extends State<Home_page>  {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   Expanded(
+                      child: InkWell(
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                            builder: (context) => PoshTransactionPage()),
+                      );
+                    },
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -106,7 +149,7 @@ class _Home extends State<Home_page>  {
                         ),
                       ],
                     ),
-                  ),
+                  )),
                   Expanded(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -147,7 +190,14 @@ class _Home extends State<Home_page>  {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    Text(
+                InkWell(
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                          builder: (context) => getAlltransactionpage()),
+                    );
+                  },
+                  child:Text(
                       'Ver todo',
                       style: TextStyle(
                         color: Colors.purple,
@@ -155,6 +205,7 @@ class _Home extends State<Home_page>  {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
+                ),
                   ],
                 ),
               ),
@@ -277,7 +328,8 @@ class _Home extends State<Home_page>  {
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => Home_page()),
-                );                break;
+                );
+                break;
               case 1:
                 Navigator.push(
                   context,
@@ -285,12 +337,11 @@ class _Home extends State<Home_page>  {
                 );
                 break;
               case 2:
-              //  Navigator.pushReplacementNamed(context, '/SettingsPage');
+                //  Navigator.pushReplacementNamed(context, '/SettingsPage');
                 break;
             }
           },
         ),
-
       ),
     );
   }
