@@ -1,7 +1,17 @@
+import 'dart:async';
+
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_application_1/publication/data/models/getuser_model.dart';
 
+import '../../../comment/presentations/page/comment_Page.dart';
+import '../bloc/getaudio/getaudio_bloc.dart';
+import '../bloc/getaudio/getaudio_event.dart';
+import '../bloc/getpost/getpost_bloc.dart';
+import '../bloc/getpost/getpost_event.dart';
+import '../bloc/getvideo/getvideo_bloc.dart';
+import '../bloc/getvideo/getvideo_event.dart';
 import '../page/addpuc.dart';
 import '../../../transaction/presentations/page/home_page.dart';
 import '../bloc/createpost/createpost_bloc.dart';
@@ -21,11 +31,37 @@ class Getpdf_page extends StatefulWidget {
 
 class _getpdf extends State<Getpdf_page> {
   int _currentIndex = 1; // Índice del ítem del foro
-
   @override
   void initState() {
     super.initState();
-    BlocProvider.of<GetpdfBloc>(context).add(FetchpdfEvent());
+
+    // Emitir evento para cargar los datos PDF al iniciar
+    context.read<GetpdfBloc>().add(FetchpdfEvent());
+
+    // Escuchar cambios de conectividad para mostrar el snackBar
+    late StreamSubscription<ConnectivityResult> subscription;
+    subscription = Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
+      if (result == ConnectivityResult.none) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Se perdió la conectividad Wi-Fi', style: TextStyle()),
+            duration: Duration(seconds: 3),
+          ),
+        );
+      }
+    });
+  }
+  void _showcomment(BuildContext context,int idPublicacion) {
+    showModalBottomSheet<void>(
+      isScrollControlled: true, // Permite que el modal cubra toda la pantalla
+      context: context,
+      builder: (BuildContext context) {
+        return Container(
+          height: MediaQuery.of(context).size.height * 0.8,
+          child: commentPage(idPublicacion:idPublicacion),
+        );
+      },
+    );
   }
   void _showadd(BuildContext context) {
     showModalBottomSheet<void>(
@@ -47,6 +83,23 @@ class _getpdf extends State<Getpdf_page> {
           child: PDFViewerScreen(pdfUrls: [pdfUrl]),
         );
       },
+    );
+  }
+  //
+  void _fetchData() async {
+    try {
+      context.read<GetpdfBloc>().add(FetchpdfEvent());
+    } catch (e) {
+      _showConnectivityError();
+    }
+  }
+
+  void _showConnectivityError() {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Conéctate a internet'),
+        duration: Duration(seconds: 3),
+      ),
     );
   }
 
@@ -82,6 +135,8 @@ class _getpdf extends State<Getpdf_page> {
             onSelected: (String result) {
               switch (result) {
                 case 'PDF':
+                  BlocProvider.of<GetpdfBloc>(context).add(FetchpdfEvent());
+
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => Getpdf_page()),
@@ -89,24 +144,28 @@ class _getpdf extends State<Getpdf_page> {
                   break;
 
                 case 'Video':
+
+
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => GetVideoPage()),
                   );
                   break;
                 case 'Imagen':
+
+
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => foto()),
                   );                  break;
                 case 'Audio':
+
+
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => GetAudioPage()),
                   );                    break;
-                case 'Publicación':
-                // Navegar a Publicacion_page
-                  break;
+
               }
             },
             itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
@@ -186,23 +245,14 @@ class _getpdf extends State<Getpdf_page> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text(
-                                  'Comentar',
-                                  style: TextStyle(color: Colors.white),
+                                GestureDetector(
+                                  onTap:() => _showcomment(context, posts[index].id),
+                                  child: Text(
+                                    'Comentar',
+                                    style: TextStyle(color: Colors.white),
+                                  ),
                                 ),
-                                Row(
-                                  children: [
-                                    Icon(
-                                      Icons.favorite,
-                                      color: Colors.red,
-                                    ),
-                                    SizedBox(width: 5),
-                                    Text(
-                                      '23', // Este número puede ser dinámico según tu modelo de datos
-                                      style: TextStyle(color: Colors.white),
-                                    ),
-                                  ],
-                                ),
+
                               ],
                             ),
                             SizedBox(height: 16),
@@ -214,8 +264,19 @@ class _getpdf extends State<Getpdf_page> {
                 },
               );
             } else if (state is GetpdfErrorState) {
-              return Text('Error occurred: ${state.error}');
-            } else {
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Text('Algo salió mal, por favor intenta nuevamente.'),
+                    Image.asset('assets/images/gesper.png'), // Agregar la imagen aquí
+                    ElevatedButton(
+                      onPressed: _fetchData,
+                      child: Text('Reintentar'),
+                    ),
+                  ],
+                ),
+              );            } else {
               return Container();
             }
           },

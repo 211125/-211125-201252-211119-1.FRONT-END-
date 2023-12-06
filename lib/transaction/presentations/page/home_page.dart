@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/transaction/presentations/page/poshTransaction_page.dart';
 import 'package:flutter_application_1/transaction/presentations/page/poshaddBalance_page.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../publication/presentations/pages/getVideo_page.dart';
+import '../../../users/presentations/blocs/postLogin/postLogin_bloc.dart';
+import '../../../users/presentations/page/postLogin_page.dart';
 import '../blocs/getbalance/getBalanceBloc.dart';
 import 'getAlltransaction_page.dart';
 
@@ -15,14 +18,25 @@ class Home_page extends StatefulWidget {
 class _Home extends State<Home_page> {
   int _currentIndex = 0;
   int id = 1;
-  int userId = 1;
+  late int userId;
+
   @override
   void initState() {
     super.initState();
 
+    final postLoginBloc = context.read<PostLoginBloc>();
+    userId = postLoginBloc.userId ?? 0;
     context
         .read<GetBalanceBloc>()
-        .add(FetchBalanceEvent(id: id, userId: userId));
+        .add(FetchBalanceEvent(id: userId, userId: userId));
+  }
+  void _logout() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.remove('token');
+    Navigator.of(context).pushAndRemoveUntil(
+      MaterialPageRoute(builder: (context) => LoginPage()),
+          (Route<dynamic> route) => false,
+    );
   }
 
   @override
@@ -89,7 +103,7 @@ class _Home extends State<Home_page> {
                           balance =
                               '\$ ' + state.balances.first.balance.toString();
                         } else if (state is GetBalanceErrorState) {
-                          balance = "Error: " + state.error;
+                          balance = "esperando..: " ;
                           print("Error: " + state.error);
                         }
                         return Padding(
@@ -337,6 +351,8 @@ class _Home extends State<Home_page> {
                 );
                 break;
               case 2:
+                _logout(); // Llama aquí al método de cierre de sesión
+
                 //  Navigator.pushReplacementNamed(context, '/SettingsPage');
                 break;
             }

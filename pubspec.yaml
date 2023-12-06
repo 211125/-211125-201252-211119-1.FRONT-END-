@@ -104,6 +104,8 @@ flutter:
     - assets/images/video.png
     - assets/images/video2.png
     - assets/images/video3.png
+    - assets/images/gesper.png
+    - assets/pdf/Avisodeprivacidad.pdf
 
 
   # The following line ensures that the Material Icons font is

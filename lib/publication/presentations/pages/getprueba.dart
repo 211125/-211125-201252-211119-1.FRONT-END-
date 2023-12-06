@@ -16,7 +16,7 @@ import '../bloc/getaudio/getaudio_event.dart';
 import '../bloc/getaudio/getaudio_state.dart';
 
 
-
+/*
 class prueba extends StatefulWidget {
   @override
   _prueba createState() => _prueba();
@@ -67,4 +67,4 @@ class _prueba extends State<prueba> {
 
     );
   }
-}
+}*/

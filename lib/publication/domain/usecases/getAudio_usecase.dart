@@ -5,7 +5,7 @@ class GetaudioUseCase {
 
   final PoshRepository poshRepository;
   GetaudioUseCase(this.poshRepository);
-  Future<List<PostModel>> execute() async {
-    return await poshRepository.getAudio();
+  Future<List<PostModel>> execute(bool coneccion) async {
+    return await poshRepository.getAudio(coneccion);
   }
 }

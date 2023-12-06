@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 
+import '../../../comment/presentations/page/comment_Page.dart';
+
 class SocialCardC extends StatefulWidget {
   final String username;
   final String userImage;
   final String postImage;
   final String description;
+  final int idpublicacion;
 
   SocialCardC({
+    required this.idpublicacion,
     required this.username,
     required this.userImage,
     required this.postImage,
@@ -32,7 +36,18 @@ class _SocialCardState extends State<SocialCardC> {
       }
     });
   }
-
+  void _showcomment(BuildContext context,int idPublicacion) {
+    showModalBottomSheet<void>(
+      isScrollControlled: true, // Permite que el modal cubra toda la pantalla
+      context: context,
+      builder: (BuildContext context) {
+        return Container(
+          height: MediaQuery.of(context).size.height * 0.8,
+          child: commentPage(idPublicacion:idPublicacion),
+        );
+      },
+    );
+  }
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -71,16 +86,16 @@ class _SocialCardState extends State<SocialCardC> {
             style: TextStyle(fontSize: 16.0),
           ),
           Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: <Widget>[
-              IconButton(
-                icon: Icon(
-                  isLiked ? Icons.favorite : Icons.favorite_border,
-                  color: isLiked ? Colors.red : null,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              GestureDetector(
+                onTap:() => _showcomment(context,widget.idpublicacion),
+                child: Text(
+                  'Comentar',
+                  style: TextStyle(color: Colors.white),
                 ),
-                onPressed: _likePost,
               ),
-              Text('${likeCount}'),
+
             ],
           ),
         ],

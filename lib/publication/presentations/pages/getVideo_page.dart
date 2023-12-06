@@ -1,10 +1,17 @@
 import 'dart:async';
+import 'package:connectivity_plus/connectivity_plus.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_application_1/publication/data/models/getuser_model.dart';
-import 'package:connectivity_plus/connectivity_plus.dart';
 
+import '../../../comment/presentations/page/comment_Page.dart';
+import '../bloc/getaudio/getaudio_bloc.dart';
+import '../bloc/getaudio/getaudio_event.dart';
+import '../bloc/getpdf/getpdf_bloc.dart';
+import '../bloc/getpdf/getpdf_event.dart';
+import '../bloc/getpost/getpost_bloc.dart';
+import '../bloc/getpost/getpost_event.dart';
 import '../page/addpuc.dart';
 import '../../../transaction/presentations/page/home_page.dart';
 import '../bloc/createpost/createpost_bloc.dart';
@@ -28,24 +35,20 @@ class _getpdf extends State<GetVideoPage> {
   @override
   void initState() {
     super.initState();
+    //BlocProvider.of<GetvideoBloc>(context).add(FetchvideoEvent());
     BlocProvider.of<GetvideoBloc>(context).add(FetchvideoEvent());
 
+
+    late StreamSubscription<ConnectivityResult> subscription;
     subscription = Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
-      print(result);
-      print('hh');
-
-      if(result == ConnectivityResult.wifi || result == ConnectivityResult.mobile) {
-      //  context.read<ViewVoluntarysBloc>().add(GetVoluntarys(coneccion: true));
-        //ScaffoldMessenger.of(context).clearSnackBars();
-      } else {
-        const snackBar = SnackBar(
-          content: Text('Se perdió la conectividad Wi-Fi', style: TextStyle(),),
-          duration: Duration(days: 365),
+      if (result == ConnectivityResult.none) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Se perdió la conectividad Wi-Fi', style: TextStyle()),
+            duration: Duration(seconds: 3),
+          ),
         );
-        //ScaffoldMessenger.of(context).showSnackBar(snackBar);
-       // context.read<ViewVoluntarysBloc>().add(GetVoluntarys(coneccion: false));
       }
-
     });
   }
   int _currentIndex = 1; // Índice del ítem del foro
@@ -60,6 +63,18 @@ class _getpdf extends State<GetVideoPage> {
       },
     );
   }
+  void _showcomment(BuildContext context,int idPublicacion) {
+    showModalBottomSheet<void>(
+      isScrollControlled: true, // Permite que el modal cubra toda la pantalla
+      context: context,
+      builder: (BuildContext context) {
+        return Container(
+          height: MediaQuery.of(context).size.height * 0.8,
+          child: commentPage(idPublicacion:idPublicacion),
+        );
+      },
+    );
+  }
 
   void _showPdfModal(BuildContext context, String pdfUrl) {
     showModalBottomSheet<void>(
@@ -67,16 +82,8 @@ class _getpdf extends State<GetVideoPage> {
       isScrollControlled: true, // Permite que el modal cubra toda la pantalla
       builder: (BuildContext context) {
         // Datos ficticios de comentarios
-        final List<Map<String, String>> comments = [
-          {"username": "Usuario1", "comment": "Este es un gran video!"},
-          {"username": "Usuario2", "comment": "Muy informativo. Gracias."},
-          {"username": "Usuario1", "comment": "Este es un gran video!"},
-          {"username": "Usuario1", "comment": "Este es un gran video!"},
-          {"username": "Usuario1", "comment": "Este es un gran video!"},
-          {"username": "Usuario1", "comment": "Este es un gran video!"},
-          {"username": "Usuario1", "comment": "Este es un gran video!"},
-          {"username": "Usuario1", "comment": "Este es un gran video!"},
-        ];
+
+
 
         return Container(
           height: MediaQuery.of(context).size.height, // Usa la altura completa de la pantalla
@@ -98,39 +105,6 @@ class _getpdf extends State<GetVideoPage> {
               Expanded(
                 child: VideoPlayerScreen(videoUrls: [pdfUrl]),
               ),
-              Container(
-                padding: EdgeInsets.all(8.0),
-                child: Row(
-                  children: <Widget>[
-                    Expanded(
-                      child: TextField(
-                        decoration: InputDecoration(
-                          hintText: "Agregar tu comentario aquí!!",
-                          border: OutlineInputBorder(),
-                        ),
-                      ),
-                    ),
-                    IconButton(
-                      icon: Icon(Icons.send),
-                      onPressed: () {
-                        // Aquí va la lógica para manejar el envío del comentario
-                      },
-                    ),
-                  ],
-                ),
-              ),              Expanded(
-                child: ListView.builder(
-                  itemCount: comments.length,
-                  itemBuilder: (context, index) {
-                    return ListTile(
-                      title: Text(comments[index]["username"] ?? ''),
-                      subtitle: Text(comments[index]["comment"] ?? ''),
-                    );
-                  },
-                ),
-              ),
-              // Campo para agregar comentario con botón de enviar
-
             ],
           ),
         );
@@ -138,7 +112,25 @@ class _getpdf extends State<GetVideoPage> {
     );
   }
 
+///
+  ///
+  ///
+  void _fetchData() async {
+    try {
+      context.read<GetpdfBloc>().add(FetchpdfEvent());
+    } catch (e) {
+      _showConnectivityError();
+    }
+  }
 
+  void _showConnectivityError() {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Conéctate a internet'),
+        duration: Duration(seconds: 3),
+      ),
+    );
+  }
 
 
   @override
@@ -170,35 +162,39 @@ class _getpdf extends State<GetVideoPage> {
           ),
           PopupMenuButton<String>(
             icon: Icon(Icons.more_vert, color: Color.fromARGB(255, 0, 0, 0)), // Icono de menú en negro
-            onSelected: (String result) {
-              switch (result) {
-                case 'PDF':
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => Getpdf_page()),
-                  );
-                  break;
+            onSelected: (String result) {              switch (result) {
+              case 'PDF':
+                BlocProvider.of<GetpdfBloc>(context).add(FetchpdfEvent());
 
-                case 'Video':
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => GetVideoPage()),
-                  );
-                  break;
-                case 'Imagen':
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => foto()),
-                  );                  break;
-                case 'Audio':
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => GetAudioPage()),
-                  );                    break;
-                case 'Publicación':
-                // Navegar a Publicacion_page
-                  break;
-              }
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => Getpdf_page()),
+                );
+                break;
+
+              case 'Video':
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => GetVideoPage()),
+                );
+                break;
+              case 'Imagen':
+
+
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => foto()),
+                );                  break;
+              case 'Audio':
+
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => GetAudioPage()),
+                );                    break;
+              case 'Publicación':
+              // Navegar a Publicacion_page
+                break;
+            }
             },
             itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
               const PopupMenuItem<String>(
@@ -231,7 +227,7 @@ class _getpdf extends State<GetVideoPage> {
         child: BlocBuilder<GetvideoBloc, GetvideoState>(
           builder: (context, state) {
             if (state is GetvideoInitialState) {
-              return Text('Press the button to fetch posts.');
+              return Text('cargado datos...');
             } else if (state is GetvideoLoadingState) {
               return CircularProgressIndicator();
             } else if (state is GetvideoLoadedState) {
@@ -279,25 +275,17 @@ class _getpdf extends State<GetVideoPage> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text(
-                                  'Comentar',
-                                  style: TextStyle(color: Colors.white),
+                                GestureDetector(
+                                  onTap:() => _showcomment(context,posts[index].id),
+                                  child: Text(
+                                    'Comentar',
+                                    style: TextStyle(color: Colors.white),
+                                  ),
                                 ),
-                                Row(
-                                  children: [
-                                    Icon(
-                                      Icons.favorite,
-                                      color: Colors.red,
-                                    ),
-                                    SizedBox(width: 5),
-                                    Text(
-                                      '23', // Este número puede ser dinámico según tu modelo de datos
-                                      style: TextStyle(color: Colors.white),
-                                    ),
-                                  ],
-                                ),
+
                               ],
                             ),
+
                             SizedBox(height: 16),
                           ],
                         ),
@@ -307,8 +295,19 @@ class _getpdf extends State<GetVideoPage> {
                 },
               );
             } else if (state is GetvideoErrorState) {
-              return Text('Error occurred: ${state.error}');
-            } else {
+              return Center(
+                child:Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Text('Algo salió mal, por favor intenta nuevamente.'),
+                    Image.asset('assets/images/gesper.png'), // Agregar la imagen aquí
+                    ElevatedButton(
+                      onPressed: _fetchData,
+                      child: Text('Reintentar'),
+                    ),
+                  ],
+                ),
+              );            } else {
               return Container();
             }
           },

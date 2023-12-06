@@ -14,7 +14,7 @@ class FetchGetallTransactionsBloceEvent extends GetallTransactionsEvent {
   final int accountId;
 
 
-  FetchGetallTransactionsBloceEvent({required this.accountId,});
+  FetchGetallTransactionsBloceEvent({required this.accountId});
 
   @override
   List<Object> get props => [accountId];

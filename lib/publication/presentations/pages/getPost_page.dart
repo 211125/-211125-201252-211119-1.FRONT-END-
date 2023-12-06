@@ -1,6 +1,15 @@
+import 'dart:async';
+
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_application_1/publication/data/models/getuser_model.dart';
+import '../bloc/getaudio/getaudio_bloc.dart';
+import '../bloc/getaudio/getaudio_event.dart';
+import '../bloc/getpdf/getpdf_bloc.dart';
+import '../bloc/getpdf/getpdf_event.dart';
+import '../bloc/getvideo/getvideo_bloc.dart';
+import '../bloc/getvideo/getvideo_event.dart';
 import '../page/addpuc.dart';
 import '../../../transaction/presentations/page/home_page.dart';
 import '../../../users/presentations/blocs/postUser/postUser_bloc.dart';
@@ -25,11 +34,31 @@ class foto extends StatefulWidget {
 
 class _fotoState extends State<foto> {
   int _currentIndex = 1; // Índice del ítem del foro
+  late StreamSubscription<ConnectivityResult> subscription;
 
   @override
   void initState() {
     super.initState();
-    BlocProvider.of<GetPostBloc>(context).add(FetchPostEvent());
+
+    subscription = Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
+      print(result);
+      print('hh');
+      BlocProvider.of<GetPostBloc>(context).add(FetchPostEvent());
+
+
+      late StreamSubscription<ConnectivityResult> subscription;
+      subscription = Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
+        if (result == ConnectivityResult.none) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Se perdió la conectividad Wi-Fi', style: TextStyle()),
+              duration: Duration(seconds: 3),
+            ),
+          );
+        }
+      });
+
+    });
   }
   void _showadd(BuildContext context) {
     showModalBottomSheet<void>(
@@ -40,6 +69,22 @@ class _fotoState extends State<foto> {
           child: Post_Page(bloc: BlocProvider.of<CreatePostBloc>(context)),
         );
       },
+    );
+  }
+  void _fetchData() async {
+    try {
+      context.read<GetpdfBloc>().add(FetchpdfEvent());
+    } catch (e) {
+      _showConnectivityError();
+    }
+  }
+
+  void _showConnectivityError() {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Conéctate a internet'),
+        duration: Duration(seconds: 3),
+      ),
     );
   }
   @override
@@ -74,6 +119,8 @@ class _fotoState extends State<foto> {
           onSelected: (String result) {
             switch (result) {
               case 'PDF':
+
+
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => Getpdf_page()),
@@ -81,17 +128,23 @@ class _fotoState extends State<foto> {
                 break;
 
               case 'Video':
+
+
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => GetVideoPage()),
                 );
                 break;
               case 'Imagen':
+
+
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => foto()),
                 );                  break;
               case 'Audio':
+
+
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => GetAudioPage()),
@@ -141,6 +194,7 @@ class _fotoState extends State<foto> {
                   return Container(
                     margin: EdgeInsets.all(10.0),
                     child: SocialCardC(
+                      idpublicacion:posts[index].id,
                       username: posts[index].userProfile,
                       userImage: posts[index].multimedia,
                       postImage: posts[index].multimedia,
@@ -150,7 +204,19 @@ class _fotoState extends State<foto> {
                 },
               );
             } else if (state is GetPostErrorState) {
-              return Text('Error occurred: ${state.error}');
+               return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Text('Algo salió mal, por favor intenta nuevamente.'),
+                    Image.asset('assets/images/gesper.png'), // Agregar la imagen aquí
+                    ElevatedButton(
+                      onPressed: _fetchData,
+                      child: Text('Reintentar'),
+                    ),
+                  ],
+                ),
+              );
             } else {
               return Container();
             }

@@ -7,4 +7,5 @@ abstract class GetvideotEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class FetchvideoEvent extends GetvideotEvent {}
+class FetchvideoEvent extends GetvideotEvent {
+}

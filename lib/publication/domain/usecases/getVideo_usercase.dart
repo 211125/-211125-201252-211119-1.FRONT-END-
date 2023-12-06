@@ -5,7 +5,7 @@ class GetvideoUseCase {
 
   final PoshRepository poshRepository;
   GetvideoUseCase(this.poshRepository);
-  Future<List<PostModel>> execute() async {
-    return await poshRepository.getVideo();
+  Future<List<PostModel>> execute(bool coneccion) async {
+    return await poshRepository.getVideo(coneccion);
   }
 }

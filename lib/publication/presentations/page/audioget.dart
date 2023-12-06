@@ -3,9 +3,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:audioplayers/audioplayers.dart';
-import '../../../reaction/data/models/post_login.dart';
-import '../../../reaction/presentations/blocs/poshReaction/poshReaction_bloc.dart';
-import '../../../reaction/presentations/blocs/poshReaction/poshReaction_event.dart';
 import '../../data/models/getuser_model.dart';
 import '../bloc/getaudio/getaudio_bloc.dart';
 import '../bloc/getaudio/getaudio_event.dart';

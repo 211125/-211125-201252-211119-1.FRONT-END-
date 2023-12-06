@@ -1,11 +1,19 @@
+import 'dart:async';
+
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:audioplayers/audioplayers.dart';
+import '../../../comment/presentations/page/comment_Page.dart';
+import '../bloc/getpdf/getpdf_bloc.dart';
+import '../bloc/getpdf/getpdf_event.dart';
+import '../bloc/getpost/getpost_bloc.dart';
+import '../bloc/getpost/getpost_event.dart';
+import '../bloc/getvideo/getvideo_bloc.dart';
+import '../bloc/getvideo/getvideo_event.dart';
 import '../page/addpuc.dart';
 import '../../../transaction/presentations/page/home_page.dart';
-import '../../../reaction/data/models/post_login.dart';
-import '../../../reaction/presentations/blocs/poshReaction/poshReaction_bloc.dart';
-import '../../../reaction/presentations/blocs/poshReaction/poshReaction_event.dart';
+
 import '../../data/models/getuser_model.dart';
 import '../bloc/createpost/createpost_bloc.dart';
 import '../bloc/getaudio/getaudio_bloc.dart';
@@ -21,12 +29,27 @@ class GetAudioPage extends StatefulWidget {
 }
 
 class _GetAudioPageState extends State<GetAudioPage> {
+  late StreamSubscription<ConnectivityResult> subscription;
+
   int _currentIndex = 1; // Índice del ítem del foro
+
 
   @override
   void initState() {
     super.initState();
     BlocProvider.of<GetaudioBloc>(context).add(FetchaudioEvent());
+
+    late StreamSubscription<ConnectivityResult> subscription;
+    subscription = Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
+      if (result == ConnectivityResult.none) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Se perdió la conectividad Wi-Fi', style: TextStyle()),
+            duration: Duration(seconds: 3),
+          ),
+        );
+      }
+    });
   }
   void _showadd(BuildContext context) {
     showModalBottomSheet<void>(
@@ -39,7 +62,22 @@ class _GetAudioPageState extends State<GetAudioPage> {
       },
     );
   }
+  void _fetchData() async {
+    try {
+      context.read<GetpdfBloc>().add(FetchpdfEvent());
+    } catch (e) {
+      _showConnectivityError();
+    }
+  }
 
+  void _showConnectivityError() {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Conéctate a internet'),
+        duration: Duration(seconds: 3),
+      ),
+    );
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -72,6 +110,8 @@ class _GetAudioPageState extends State<GetAudioPage> {
             onSelected: (String result) {
               switch (result) {
                 case 'PDF':
+                  BlocProvider.of<GetpdfBloc>(context).add(FetchpdfEvent());
+
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => Getpdf_page()),
@@ -79,17 +119,23 @@ class _GetAudioPageState extends State<GetAudioPage> {
                   break;
 
                 case 'Video':
+
+
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => GetVideoPage()),
                   );
                   break;
                 case 'Imagen':
+
+
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => foto()),
                   );                  break;
                 case 'Audio':
+
+
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => GetAudioPage()),
@@ -130,7 +176,7 @@ class _GetAudioPageState extends State<GetAudioPage> {
         child: BlocBuilder<GetaudioBloc, GetaudioState>(
           builder: (context, state) {
             if (state is GetaudioInitialState) {
-              return Center(child: Text('Press the button to fetch posts.'));
+              return Center(child: Text('error a cargar los datos .'));
             } else if (state is GetaudioLoadingState) {
               return Center(child: CircularProgressIndicator());
             } else if (state is GetaudioLoadedState) {
@@ -146,7 +192,17 @@ class _GetAudioPageState extends State<GetAudioPage> {
                 },
               );
             } else if (state is GetaudioErrorState) {
-              return Center(child: Text('Error occurred: ${state.error}'));
+              return Center(child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Text('Algo salió mal, por favor intenta nuevamente.'),
+                  Image.asset('assets/images/gesper.png'), // Agregar la imagen aquí
+                  ElevatedButton(
+                    onPressed: _fetchData,
+                    child: Text('Reintentar'),
+                  ),
+                ],
+              ),);
             } else {
               return Container();
             }
@@ -234,7 +290,18 @@ class _AudioItemWidgetState extends State<AudioItemWidget> {
     player.dispose();
     super.dispose();
   }
-
+  void _showcomment(BuildContext context,int idPublicacion) {
+    showModalBottomSheet<void>(
+      isScrollControlled: true, // Permite que el modal cubra toda la pantalla
+      context: context,
+      builder: (BuildContext context) {
+        return Container(
+          height: MediaQuery.of(context).size.height * 0.8,
+          child: commentPage(idPublicacion:idPublicacion),
+        );
+      },
+    );
+  }
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -313,23 +380,14 @@ class _AudioItemWidgetState extends State<AudioItemWidget> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    'Comentar',
-                    style: TextStyle(color: Colors.white),
+                  GestureDetector(
+                    onTap:() => _showcomment(context,widget.post.id),
+                    child: Text(
+                      'Comentar',
+                      style: TextStyle(color: Colors.white),
+                    ),
                   ),
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.favorite,
-                        color: Colors.red,
-                      ),
-                      SizedBox(width: 5),
-                      Text(
-                        '23',
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ],
-                  ),
+
                 ],
               ),
             ],

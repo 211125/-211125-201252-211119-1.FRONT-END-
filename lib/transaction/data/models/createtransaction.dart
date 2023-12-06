@@ -37,4 +37,16 @@ class createtransactionModel extends createtransaction {
         accountId: post.categoriId
     );
   }
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'date': date,
+'type': type,
+    'amount':amount,
+      'description':description,
+      'categoriId':categoriId,
+      'accountId':accountId
+    };
+  }
+
 }

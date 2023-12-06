@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -12,6 +15,7 @@ class getAlltransactionpage extends StatefulWidget {
 class _getAlltransactionpage extends State<getAlltransactionpage> {
   int accountId = 1;
   late int userId;
+  late StreamSubscription<ConnectivityResult> subscription;
 
   @override
   void initState() {
@@ -20,6 +24,19 @@ class _getAlltransactionpage extends State<getAlltransactionpage> {
 
     super.initState();
     context.read<GetAllTransactionsBloc>().add(FetchGetallTransactionsBloceEvent(accountId: userId));
+
+
+    late StreamSubscription<ConnectivityResult> subscription;
+    subscription = Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
+      if (result == ConnectivityResult.none) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Se perdió la conectividad Wi-Fi', style: TextStyle()),
+            duration: Duration(seconds: 3),
+          ),
+        );
+      }
+    });
   }
 
   @override

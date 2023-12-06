@@ -2,6 +2,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 
+import '../../../comment/presentations/page/comment_Page.dart';
+
 class VideoPlayerScreen extends StatefulWidget {
   final List<String> videoUrls;
 
@@ -29,6 +31,7 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
     _controller.dispose();
     super.dispose();
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -71,6 +74,7 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
                         ],
                       ),
                     );
+
                   } else {
                     return Center(
                       child: CircularProgressIndicator(

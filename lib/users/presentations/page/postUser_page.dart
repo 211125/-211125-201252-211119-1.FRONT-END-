@@ -26,8 +26,17 @@ class _CreateUserPageState extends State<CreateUserPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Crear usuario')),
-      body: BlocBuilder<CreateUserBloc, PostUserState>(
+      appBar: AppBar(
+        backgroundColor: Color(0xFF5C2684),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+      ),
+      body:SingleChildScrollView(
+        child: BlocBuilder<CreateUserBloc, PostUserState>(
         bloc: widget.bloc,
         builder: (context, state) {
           if (state is PostUserLoading) {
@@ -39,20 +48,34 @@ class _CreateUserPageState extends State<CreateUserPage> {
               children: [
                 TextFormField(
                   controller: _nameController,
-                  decoration: InputDecoration(labelText: 'Nombre'),
-                ),
+                  decoration: InputDecoration(
+                    hintText: 'Enter your name',
+                    labelText: 'Email',
+                  ),                ),
                 TextFormField(
                   controller: _lastNameController,
-                  decoration: InputDecoration(labelText: 'Apellido'),
+
+                  decoration: InputDecoration(
+                    hintText: 'Enter your Apellido',
+                    labelText: 'Apellido',
+                  ),
                 ),
 
-                TextFormField(
-                  controller: _emailController,
-                  decoration: InputDecoration(labelText: 'Correo electrónico'),
+                TextField(
+                  controller: _emailController, // Asignar el controlador al campo de texto
+                  decoration: InputDecoration(
+                    hintText: 'Enter your email',
+                    labelText: 'Email',
+                  ),
+
                 ),
                 TextFormField(
                   controller: _passwordController,
-                  decoration: InputDecoration(labelText: 'Contraseña'),
+
+                  decoration: InputDecoration(
+                    hintText: 'Enter your password',
+                    labelText: 'password',
+                  ),
                   obscureText: true,
                 ),
                 ElevatedButton(
@@ -71,7 +94,7 @@ class _CreateUserPageState extends State<CreateUserPage> {
                   onPressed: () {
                     if (_imagePath != null) {
                       widget.bloc.add(CreateUserEvent(user: UserModel(name: _nameController.text, last_name:_lastNameController.text, gmail:_emailController.text, password:_passwordController.text, filePath:_imagePath!)));
-                   /**/
+                      /**/
                     }
                   },
                 ),
@@ -79,7 +102,8 @@ class _CreateUserPageState extends State<CreateUserPage> {
             );
           }
         },
-      ),
+      ),)
+
     );
   }
 }

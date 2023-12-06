@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../domain/entities/createTransaction.dart';
 import '../../domain/entities/getAccount.dart';
@@ -14,14 +15,14 @@ abstract class ReactionLocalDataSource {
   Future<void> updateAddBalance(AddBalanceModel add);
   Future<void> updateReduceBalance(AddBalanceModel add);
   Future<List<getAccount>> getaccount(int id,int userId);
-  Future<List<createtransactionModel>> getAllTransactions(int accountId);
+  Future<List<createtransactionModel>> getAllTransactions(int accountId, bool conexion);
   Future<List<getTransactions>> getTransaction(int id,int accountId);
   Future<void> createTransaction(createtransactionModel transaction);
 
 }
 
 class TransactionLocalDataSourceImp implements ReactionLocalDataSource {
-  final String _baseUrl = 'https://plv3w7fl-3001.usw3.devtunnels.ms';
+  final String _baseUrl = 'https://plv3w7fl-3000.usw3.devtunnels.ms';
 
   @override
   Future<void> createTransaction(createtransactionModel transaction) async {
@@ -52,22 +53,44 @@ class TransactionLocalDataSourceImp implements ReactionLocalDataSource {
 
 
   @override
-  Future<List<createtransactionModel>> getAllTransactions(int accountId) async {
+  Future<List<createtransactionModel>> getAllTransactions(int accountId, bool conexion) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     try {
-      var response = await http.get(Uri.parse('$_baseUrl/transaction/list/all/$accountId'));
-      if (response.statusCode == 200) {
-        var jsonResponse = jsonDecode(response.body);
+      var response;
+      var jsonResponse;
+      bool success = false;
 
-        // Verificar si la respuesta es exitosa y contiene la clave 'data'
-        if (jsonResponse['status'] == 'success' && jsonResponse.containsKey('data')) {
-          // Convertir cada elemento en la lista 'data' a un objeto 'createtransactionModel'
-          List<createtransactionModel> transactions = (jsonResponse['data'] as List)
-              .map((item) => createtransactionModel.fromJson(item as Map<String, dynamic>))
-              .toList();
-          return transactions; // Devolver la lista de transacciones
+      if (conexion) {
+        response = await http.get(Uri.parse('$_baseUrl/transaction/list/all/$accountId'));
+        if (response.statusCode == 200) {
+          jsonResponse = jsonDecode(response.body);
+
+          if (jsonResponse['status'] == 'success' && jsonResponse.containsKey('data')) {
+            List<createtransactionModel> transactions = (jsonResponse['data'] as List)
+                .map((item) => createtransactionModel.fromJson(item as Map<String, dynamic>))
+                .toList();
+
+            // Almacenar las transacciones en SharedPreferences
+            sharedPreferences.setString('transactions', jsonEncode(transactions.map((t) => t.toJson()).toList()));
+            return transactions; // Devolver la lista de transacciones
+          } else {
+            throw Exception('Failed to load transactions');
+          }
         } else {
           throw Exception('Failed to load transactions');
         }
+      } else {
+        String transactionsString = sharedPreferences.getString('transactions') ?? "[]";
+        jsonResponse = jsonDecode(transactionsString);
+        success = true;
+      }
+
+      if (success) {
+        List<createtransactionModel> transactions = jsonResponse.map<createtransactionModel>(
+                (transaction) => createtransactionModel.fromJson(transaction)
+        ).toList();
+
+        return transactions;
       } else {
         throw Exception('Failed to load transactions');
       }

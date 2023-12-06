@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../domain/entities/session.dart';
 import '../../domain/entities/userLogin.dart';
@@ -68,7 +69,7 @@ class UserLocalDataSourceImp implements UserLocalDataSource {
     if (response.statusCode != 200) {
           print('Failed to create user${response.statusCode}');
 
-          throw Exception('correo o contraseña incorrectos');
+          throw Exception('usuario y/o contraseña inválidos');
     }
 
     final body = jsonDecode(response.body);
@@ -80,6 +81,8 @@ class UserLocalDataSourceImp implements UserLocalDataSource {
     String status = body['status'];
     String token = body['token'];
     int userId = body['userId'];
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('token', token);
 
     if (status == null || token == null || userId == null) {
       throw Exception('Missing required fields in response');

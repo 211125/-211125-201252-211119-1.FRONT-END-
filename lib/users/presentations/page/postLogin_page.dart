@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/users/presentations/page/postUser_page.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../transaction/presentations/page/home_page.dart';
 import '../blocs/postLogin/postLogin_bloc.dart';
 
 import 'package:fluttertoast/fluttertoast.dart';
+
+import '../blocs/postUser/postUser_bloc.dart';
+import 'RegisterPage.dart';
 
 class LoginPage extends StatelessWidget {
 
@@ -22,10 +26,10 @@ class LoginPage extends StatelessWidget {
           },
         ),
       ),
-      body: Column(
+      body: SingleChildScrollView(
+    child:Column(
         children: [
-          Expanded(
-            flex: 1,
+          Container(
             child: Container(
               color: Color(0xFF5C2684),
               padding: EdgeInsets.only(top: 95.0), // Ajusta este valor para cambiar la posición vertical
@@ -34,8 +38,7 @@ class LoginPage extends StatelessWidget {
               ),
             ),
           ),
-          Expanded(
-            flex: 3,
+          Container(
             child: Padding(
               padding: EdgeInsets.all(20.0),
               child: Column(
@@ -85,13 +88,24 @@ class LoginPage extends StatelessWidget {
                     ),
                   ),
                   SizedBox(height: 10.0), // Añadido para el espacio entre el botón y el texto
-                  Text(
-                    'Create an account?',
-                    style: TextStyle(
-                      color: Color(0xFF5C2684),
+                  InkWell( // Utiliza InkWell para efecto visual al tocar
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => RegisterPage(), // Asegúrate de tener una clase RegisterPage
+                        ),
+                      );
+                    },
+                    child: Text(
+                      'Create an account?',
+                      style: TextStyle(
+                        color: Color(0xFF5C2684),
+                      //  decoration: TextDecoration.underline, // Opcional: Subraya el texto para dar aspecto de enlace
+                      ),
                     ),
                   ),
-                 BlocBuilder<PostLoginBloc, InicioState>(
+
+                  BlocBuilder<PostLoginBloc, InicioState>(
                       builder: (context, state) {
                         if(state is InicioCoordinadorLoading){
                           return const Text("Cargando ...");
@@ -119,6 +133,7 @@ class LoginPage extends StatelessWidget {
             ),
           ),
         ],
+      ),
       ),
     );
   }

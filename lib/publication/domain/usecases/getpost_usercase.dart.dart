@@ -7,7 +7,7 @@ class GetpostUseCase {
 
   final PoshRepository poshRepository;
   GetpostUseCase(this.poshRepository);
-  Future<List<PostModel>> execute() async {
-      return await poshRepository.getUsers();
+  Future<List<PostModel>> execute(bool coneccion) async {
+      return await poshRepository.getUsers( coneccion);
   }
 }

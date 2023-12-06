@@ -8,8 +8,8 @@ class GetAllTransactionsUseCase {
 
   GetAllTransactionsUseCase(this.transactionRepository);
 
-  Future<List<createtransactionModel>> execute(int accountId) async {
-    return await transactionRepository.getAllTransactions(accountId);
+  Future<List<createtransactionModel>> execute(int accountId,bool conexion) async {
+    return await transactionRepository.getAllTransactions(accountId, conexion);
   }
 
 }

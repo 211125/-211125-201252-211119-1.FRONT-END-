@@ -17,22 +17,22 @@ class PoshRepositoryImpl implements PoshRepository {
 
 
   @override
-  Future<void> createpublication(createModel user) async {
-    await poshLocalDataSource.createpublication(user);
+  Future<void> createpublication(createModel user,bool connection) async {
+    await poshLocalDataSource.createpublication(user,connection);
   }
 
   @override
-  Future<List<PostModel>> getUsers() async {
-    return await poshLocalDataSource.getUsers();
+  Future<List<PostModel>> getUsers(bool coneccion) async {
+    return await poshLocalDataSource.getUsers( coneccion);
 
   }
   @override
-  Future<List<PostModel>> getVideo() async {
-    return await poshLocalDataSource.getVideo();
+  Future<List<PostModel>> getVideo(bool coneccion) async {
+    return await poshLocalDataSource.getVideo(coneccion);
 
   } @override
-  Future<List<PostModel>> getAudio() async {
-    return await poshLocalDataSource.getAudio();
+  Future<List<PostModel>> getAudio(bool coneccion) async {
+    return await poshLocalDataSource.getAudio(coneccion);
 
   }
 
@@ -42,8 +42,8 @@ class PoshRepositoryImpl implements PoshRepository {
 
   }
   @override
-  Future<List<PostModel>> getPdf() async {
-    return await poshLocalDataSource.getPdf();
+  Future<List<PostModel>> getPdf(bool coneccion) async {
+    return await poshLocalDataSource.getPdf(coneccion);
 
   }
   //  @override
