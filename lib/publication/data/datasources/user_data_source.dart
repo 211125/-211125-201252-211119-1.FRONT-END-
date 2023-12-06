@@ -196,35 +196,10 @@ Future<List<PostModel>> getUsers(bool coneccion) async {
       throw Exception('Failed to load pdf');
     }
   }
+
   @override
-  Future<void> createpublication(createModel user,bool coneccion) async {
-  final url = '$_baseUrl/publication/publish';
-
-    // Create a multipart request
-    var request = http.MultipartRequest('POST', Uri.parse(url));
-
-  // Add text fields
-  request.fields['userId'] = user.userId.toString();
-  request.fields['description'] = user.description;
-  // Add file
-  var pic = await http.MultipartFile.fromPath('multimedia', user.multimedia);
-  request.files.add(pic);
-
-  // Send the request
-  var response = await request.send();
-      if (response.statusCode == 201) {
-          print('User created successfully');
-      } else {
-          print('Failed to create user');
-          print('Status code: ${response.statusCode}');
-          print('Response body: ${await response.stream.bytesToString()}');
-          throw Exception('Failed to create user');
-      }
-
-  }
-
-  Future<void> createPublication(createModel user, bool connection) async {
-    if (connection) {
+  Future<void> createpublication(createModel user, bool coneccion) async {
+    if (coneccion) {
       final url = '$_baseUrl/publication/publish';
 
       var request = http.MultipartRequest('POST', Uri.parse(url));
